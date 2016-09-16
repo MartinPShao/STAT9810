@@ -1,0 +1,3009 @@
+\documentclass[english, 11pt]{article}
+\usepackage{notes}
+\usepackage{tikz}
+\usetikzlibrary{shapes,backgrounds}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{extarrows}
+\usepackage{mathtools}
+
+
+
+
+% Uncomment these for a different family of fonts
+% \usepackage{cmbright}
+% \renewcommand{\sfdefault}{cmss}
+% \renewcommand{\familydefault}{\sfdefault}
+% HELP
+% \section{}
+% \subsetion{}
+
+
+\newcommand{\thiscoursecode}{[STAT 9810]}
+\newcommand{\thiscoursename}{Advanced Probability I}
+\newcommand{\thisprof}{Dr. Athanasios Christou Micheas}
+\newcommand{\me}{Peng Shao}
+\newcommand{\thisterm}{(FALL) 2016}
+\newcommand{\website}{}
+\newcommand{\lp}{\left(}
+\newcommand{\rp}{\right)}
+
+% Headers
+\chead{\thiscoursename \ Course Notes}
+\lhead{\thiscoursecode}
+
+
+%%%%%% TITLE %%%%%%
+\newcommand{\notefront} {
+\pagenumbering{roman}
+\begin{center}
+
+{\ttfamily \url{\website}} {\small}
+
+\textbf{\Huge{\noun{\thiscoursecode}}}{\Huge \par}
+
+{\large{\noun{\thiscoursename}}}\\ \vspace{0.1in}
+
+  {\noun \thisprof} \ $\bullet$ \ {\noun \thisterm} \ $\bullet$ \ {\noun {University of Missouri, Columbia}} \\
+
+  \end{center}
+  }
+
+% Begin Document
+\begin{document}
+
+% Notes front
+\notefront
+% Table of Contents and List of Figures
+\tocandfigures
+% Abstract
+\doabstract{Objectives.
+\begin{itemize}
+\item Basic Statistical Procedure;
+\item Methods for evaluating and comparing procedures;
+\item Approaches for deriving good procedures.
+\end{itemize}
+Purpose of Statistics is to justify conclusions from data by "The Scientific Method". "The Scientific Method" includes:
+\begin{itemize}
+\item form hypothese;
+\item observe data objectively;
+\item draw conclusion/form new hypotheses.
+\end{itemize}
+Proper statistical analysis allows us to defend our conclusions.
+This requires a defense(Mathematical Statistical) of what is "proper" or "good" or "effective" analysis.
+}
+
+
+
+%\[ e^{i\pi} + 1 = 0 \]
+
+%\begin{align*}
+%  3 & = 1 + 2 \\
+%    & = 1 + 1 + 1
+%\end{align*}
+
+%\begin{defn}[addition]\label{addition}
+% Two {\bf addition} operation adds two numbers, for $a, b \in \R$, their %sum is
+ %\[ a + b \]
+%\end{defn}
+
+%The \nameref{addition} rule is very good.
+
+%\begin{lstlisting}[language=lisp]
+%(define sum (lambda args (foldr + 0 args)))
+%\end{lstlisting}
+
+%\tc{this is code\\}}
+
+
+
+
+
+\section{Chapter 6}
+\subsection{Data Summary}
+\begin{exmp} ("The location problem")
+-Identifying the center of a population of values (distribution)
+
+Say we let $m=$mean of the population;
+\begin{enumerate}[1)]
+\item use $\hat{m}=$avg of the data to estimate $m$;
+\item use $\tilde{m}=$median of the sample to  estimate;
+\item use $\dot{m}=$avg of the middle half of the data (25\% trimmed mean) to estimate $m$;
+\end{enumerate}
+$\hat{m}$ is the most intuitive (but sensitive to outliers), $\tilde{m}$ is at least reasonable if population si symmetric about $m$, $\tilde{m}$ and $\dot{m}$ are insensitive to outliers. We want to compare such estimates, which one tends to be closest to the true value of $m$.
+
+Implicit in this is that the data are not totally predictable -- hence whatever data we get are subject to some kinds of "error". So we need to understand these "errors".
+
+A standard way of expressing the location 
+$$
+i\text{th location:}\qquad X_i=m+\varepsilon_i
+$$
+where $\varepsilon_i$ is unobservable and has mean zero. Then we can "model" the $\varepsilon_i$'s to study the possible estimators of $m$ within this frame work. We will usually assume:\\
+\textbf{Assumption 1.2}: $X_1, X_2, \dots$ are independent rv's with indentical $F_X$ ($X_i\sim i.i.d. ~F_X$).
+\textbf{Assumption 1.3}: The sample size $n$ is fixed, not random.
+Both of these can be a design issue; \underline{i.e.} determined by the way data are collected.
+
+If $X_i\sim i.i.d. ~F_X$ and $F_X$ has mean m then $\varepsilon_i=X_i-m$ are $i.i.d. ~F_\varepsilon$, where $F_X(x)=F_\varepsilon(X-m)$.
+
+If $F_X$ has pdf $f_x$ then $F_\varepsilon$ has pdf $f_\varepsilon$ such that 
+$$
+f_X(x)=f_\varepsilon(X-m)
+$$
+
+If we know $f_\varepsilon=\text{normal}(0, \sigma^2)$ pdf, then we can use this fact to consider how $\hat{m}, \tilde{m}, \&, \dot{m}$ compare. It turns out that $\hat{m}=\bar{X}$ is the "best".
+
+\underline{But} if $f_\varepsilon=\text{Laplace}$ pdf,
+$$
+f_\varepsilon(u)=\frac{1}{2\sigma}e^{-|u|/\sigma}
+$$
+then $\tilde{m}$ is the "best".
+
+If $f_\varepsilon$ is Logistic, then something else is "best". 
+
+If $f_\varepsilon$ is completely unknown (except it is mean zero) then $\hat{m}=\bar{X}$ is still sensible (and may be the only estimator)
+\end{exmp}
+
+Model
+
+\underline{\textbf{GRAPH HERE}}
+
+\subsection{Summary Ch3, 4}
+
+\begin{defn} 
+A parametric family of \underline{distributions} is a collection of distributions indexed by a finite dimensional parameter space. A nonparametric family is a collection that is not parametric.
+\end{defn}
+
+\underline{e.g.}
+$$
+f=\{F(\cdot|\theta):\theta\in\Theta\}
+$$
+where $\theta$ is parameter and $\Theta$ is parameter space.
+
+\begin{exmp}
+Poisson($\lambda$) distribution, $\lambda$ -- parameter, parameter space = $(0, \infty)$.
+\end{exmp}
+
+
+\begin{exmp}
+Normal distribution ($\mu,\sigma^2$), parameter $\theta=(\mu, \sigma^2)$, parameter space = $\mathbb{R}\times(0, \infty)$.
+\end{exmp}
+
+\begin{exmp}
+$\mathscr{F}=\{F:F\text{ has positive continuous density }f\}$, this is a nonparametric example.
+\end{exmp}
+
+\begin{exmp}
+$\mathscr{F}=\{F:F\text{ has density }f(x-m), m\in\mathbb{R}, f\text{ has mean 0}\}$, this is a semiparametric example.
+\end{exmp}
+
+\begin{defn}
+A parametric family$\mathscr{F}=\{F(\cdot|\theta):\theta\in\Theta\}$ is \underline{identifiable},  if $\theta_1\not=\theta_2
+\Rightarrow F(\cdot|\theta_1)\not=F(\cdot|\theta_2)$ -- each distibution correspons to a unique value of $\theta.$
+\end{defn}
+
+Since the data depend only on the distribution, $\theta$ is not \underline{estimatable} if more than one value corresponds o the distribution.
+
+\begin{exmp}
+$X_i=\mu+\varepsilon_i, \qquad \varepsilon\sim \text{N}(\nu, \sigma^2)$, where $X_i$ is observable and $\varepsilon_i$ is not observable. Let $\theta=(\mu, \nu, \sigma^2)$, $X_i\sim\text{N}(\mu+\nu, \sigma^2)$ so $\theta_2=(\mu+c, \nu-c, \sigma^2)$ for any $c\in \mathbb{R}$. Then some distribution for $X_1, \dots, X_n$,
+$$
+\left[\text{N}(\mu+\nu,\sigma^2)\right]
+$$
+In fact, we say, $\mu+\nu$ is estimable but neither $\mu$ nor $\nu$ is estimable.
+\end{exmp}
+
+Types of parametric families (not distinct)
+\begin{enumerate}[1).]
+\item \underline{location-scale model}\\
+Suppose $Z_i\sim i.i.d. ~F_Z, i=1, \dots, n$ and we observe $X_i=\mu+\sigma Z_i$, then $F_X(x)=F_Z\left(\frac{X-\mu}{\sigma}\right)$. ($\mu$ and $\sigma$ not necessary the mean and standard deviation)
+
+Generally, one or both parameters are unknown and need to be estimated.
+\begin{exmp}[$\text{N}(\mu, \sigma^2)$]
+
+$$
+f(x)=\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}=\frac{1}{\sigma}\phi\left(\frac{x-\mu}{\sigma}\right)
+$$
+where $\phi$ is standard normal density.
+\end{exmp}
+
+\begin{exmp}[Uniform($a, b$)]
+Uniform($\mu-\sigma, \mu+\sigma$)=$\frac{1}{2\sigma}I_{-1,1}\left(\frac{x-\mu}{\sigma}\right)$, where $\mu=\frac{a+b}{2}$, $\sigma=\frac{b-a}{2}$
+\end{exmp}
+
+\item \underline{Exponential Families}
+
+pdf of pmf has the form
+$$
+f(x|\theta)=h(x)c(\theta)e^{w_1(\theta)t_1(x)+\cdots+w_k(\theta)t_k(x)}$$
+(This requires that the support of $f$ does not  depend on $\Theta$.)
+\begin{exmp}[Binomial($n, p$) with $n$ known]
+$$
+f(x|p)=\underbrace{\binom{n}{x}I_{\{0, 1, \dots, n\}}(x)}_{h(x)}\underbrace{(1-p)^n}_{c(p)}e^{\overbrace{x}^{t(x)}\overbrace{\{\log(p)-\log(1-p)\}}^{w(\theta)}}
+$$
+\end{exmp}
+\begin{exmp}[Gamma($\alpha, \beta$)]
+$$
+f(x|p)=I_{(0, \infty)}(x)\frac{1}{\Gamma(\alpha)}e^{x\left(-\frac{1}{\beta}\right)+\log(x)(\alpha-1)}
+$$
+\end{exmp}
+\begin{exmp}[Displaced exponential distribution]
+$$
+f(x|\theta, \beta)=\frac{1}{\beta}e^{-\frac{x-\theta}{\beta}}I_{\theta, \infty}(x)
+$$
+
+\underline{\textbf{GRAPH HERE}}
+
+\underline{NOT} an exponential family
+\end{exmp}
+\item \underline{Hierarchical Models}
+
+given conditional distribution of $X$ and r.v. $Y$ (with parameters) and the distribution of $Y$ (with parameters) but data are just $X$'s.
+\begin{exmp}
+$X|Y\sim \text{Binomial}(y, p), Y\sim \text{Poisson}(\lambda)$, In this case we find $X\sim \text{Poisson}(\lambda p)$.
+
+(BTW, "$X|Y$" is \underline{NOT} a r.v. rather $X|Y\sim F$ to describe the conditional distribution of $X$ given $Y$.)
+\end{exmp}
+\end{enumerate}
+
+\subsection{Data Reduction}
+
+We are familiar with data summaries.
+
+Question -- given a parametric family for the model, how best to summarize the data?
+
+\begin{defn}[Moment summaries]
+$k$-th moment of a sample $X_1, \dots, X_n$ is
+$$
+\hat{m}_k=\frac{1}{n}\sum_{i=1}^nX^k_i
+$$
+\end{defn}
+
+sample mean: $\bar{X}=\hat{m}_1$;\\
+sample variance: $s^2=\frac{n}{n-1}(\hat{m}_2-\hat{m}_1^2)$;\\
+sample skewness: $\hat{\gamma}=\frac{1}{n}\sum_{i=1}^n\left(\frac{X_i-\bar{X}}{s}\right)^3$.
+
+\begin{defn}[Percentiles] $0<p<1$, 100$p$th percentile ($p$th quantile) of the samples is
+$$
+\hat{x}_p=x_{\lceil np\rceil}
+$$
+where $\lceil np\rceil$ is rounded up and $x_{(1)}\leqslant x_{(2)}\leqslant \cdots\leqslant x_{(n)}$ (order statistics).
+\end{defn}
+
+Do these suffic when we have a parametric family $\{F(\cdot|\bm{\theta}:\bm{\theta}\in \bm{\Theta}\}$?
+
+\subsection{Sufficience}
+
+A summary statistics $\bm{T}(\bm{X})$ generally reduces the data in the sense that there are more than one sample having the same value for $\bm{T}(\bm{x})$. $\{\bm{x}:\bm{T}(\bm{x})=t\}$ is not a single sample. This means we lose some information in reducing  to just $\bm{T}(\bm{x})$. This does not necessarily mean a reduction in dimension.
+
+\begin{exmp}
+$\bm{T}(\bm{X})=(X_{(1)}, \dots ,X_{(n)})$ is the vector of order statistics has dimension $n$, as does the sample. But it does involve data reduction because more than one sample have the same order statistics.
+\end{exmp}
+
+We want to discuss 3 Principles (approaches, philosophies) for summarizing in meaningful, useful ways.
+
+\underline{Note}: We can choose to follow principle or not.
+
+
+\underline{\textbf{Sufficiency Principle}}
+
+If $\bm{T}(\bm{X})$ is a sufficient summary of $\bm{X}$ $(X_i\sim i.i.d. ~F(\cdot|\theta))$. Then any (legitimate) inference about $\bm{\theta}$ depends on the data only through $\bm{T}(\bm{X})$.
+
+\underline{i.e.} $\bm{X}$ and $\bm{Y}$ are tow samples such that $T(\bm{X})=T(\bm{Y})$,  then the inference(s) about $\theta$ should be the same.
+
+\begin{exmp}[Inspection]\label{exmp:inspction}
+Consider sampling (with or without replacement) from a population of manufactured items where $p=$ defective rate. Let
+$$
+X_i=\left\{\begin{aligned}0&\quad \text{if $i$th item is not defective}\\
+1&\quad \text{if $i$th item is defective}\end{aligned}\right.
+$$
+The sample  proportion $\hat{p}=\frac{\text{\# of defectives}}{n}=\frac{1}{n}(X_1+\cdots+X_n)=\bar{X}$.
+
+If $\hat{p}$ is sufficient, then any inference about $p$ should depend only on $\hat{p}$ (and $n$).
+\end{exmp}
+
+
+\begin{defn}
+A statistic $T(\bm{X})$ is sufficient for $\theta$ if the conditional distribution of $\bm{X}$ given $T(\bm{X})$, does \underline{NOT} depend on $\theta$.
+\end{defn}
+
+Imagine data are generate as follows:
+$$
+\underbrace{\theta}_{\text{unknown value of the paramter}}\xrightarrow[]{\text{use dist of $T$, $F_T(t|\theta)$}}\underbrace{T(\bm{X})}_{\text{generate the stat. T}}\xrightarrow[F_{\bm{X}|T}(\bm{x}|T) \text{ which does not depend on $\theta$}]{\text{use cond. dist. of $\bm{X}$, given $T$}}\underbrace{\bm{X}}_{\text{generate the data from $T$}}
+$$
+
+
+idea -- second step can be used to generate many samples with the same summary $T$ since the second step does not depend on $\theta$ it does not given more information about theta.
+
+
+\begin{exmp}[Example \ref{exmp:inspction} Inspection cont.]
+Sample with replacement. Here $X_i\sim i.i.d.~ \text{ Bernoulli}(p)$. Consider $T=\sum_{i=1}^nX_i=n\hat{p}$. So $T\sim \text{Binomial(n, p)}$. We want
+$$
+f_{\bm{X}|T}(\bm{X}|T)=\frac{P(X=x, T=t)}{P(T=t)}=\left\{\begin{aligned}
+&\frac{P(X=x)}{P(T=t)}&\quad \text{ if } T(\bm{X})=t\\
+&0&\qquad \text{ if } T(\bm{X})\not=t
+\end{aligned}\right.
+$$
+
+In the case $X_1+\cdots+X_n=t$;
+$$
+f_{\bm{X}|T}(\bm{x}|t)=\frac{p^{x_1}(1-p)^{1-x_1}\cdots p^{x_n}(1-p)^{1-x_n}}{\binom{n}{t}p^t(1-p)^{n-t}}=\frac{1}{\binom{n}{t}}, \text{ since } t=x_1+\cdots+x_n
+$$
+which is independent of $p$
+So T (and hence $\hat{p}$) is sufficient for p, same for sampling withou replacement.
+\end{exmp}
+
+\begin{exmp}\label{exmp:26}
+$X_1, \dots, X_n\sim i.i.d.~ \text{exp}(\beta)$. Again, let $T=X_1+\cdots+X_n\sim \text{gamma}(n, \beta)$, so $f_T(t)=\frac{t^{n-1}}{(n-1)!\beta^n}e^{-t/\beta}I_{(0, \infty)}(t)$. By the joint density of $(\bm{X}, T)$, we real mean the density of $(x_1, \dots, x_{n-1}, t)$, since $x_n=t-(x_1+\cdots+x_{n-1})$, $\bm{X}\rightarrow(X_1, X_2, \dots, X_{n-1}, X_1+X_2+\cdots+X_n)$ is 1-1. So the joint density of $(\bm{X}, T)$ can be expressed as 
+$$
+\begin{aligned}
+f_{\bm{X}}(x_1, \dots, x_{n-1}, t-x_1-\cdots-x_{n-1})=&\prod_{i=1}^{n-1}\left(\frac{1}{\beta}e^{-\frac{x_i}{\beta}}I_{(0, \infty)}(x_i)\right)\cdot\frac{1}{\beta}e^{-(t-x_1-\cdots-x_{n-1})/\beta}I_{(0, \infty)}\left(t-\sum_{i=1}^{n-1}x_i\right)\\
+=&\frac{1}{\beta^n}e^{-t/\beta}\prod_{i=1}^{n-1}I_{(0, \infty)}(x_i)
+\end{aligned}
+$$
+We want 
+$$
+\begin{aligned}
+f_{\bm{X}|T}(\bm{x}|T)=&\frac{\frac{1}{\beta^n}e^{-t/\beta}\prod_{i=1}^{n-1}I_{(0, \infty)}(x_i)}{\frac{t^{n-1}}{(n-1)!\beta^n}e^{-t/\beta}I_{(0, \infty)}(x_i)}\\
+=&\frac{(n-1)!}{t^{n-1}}
+\end{aligned}
+$$
+which does not depend on $\beta$, including the constrains (if $X_i$'s$>0, t>0$), so $T=X_1+\cdots+X_n$ is sufficient for $\beta$. $T=T(\bm{X})$ is sufficient for $\theta$ if condition distribution of $\bm{X}$, given $T$, does not depend on $\theta$.
+\end{exmp}
+
+
+\begin{cor}\label{cor:2.7}
+Suppose $T$ is sufficient for $\theta$, 
+\begin{enumerate}[i).]
+\item For any $A\subset\R^n$, 
+$$
+P(\bm{X}\in A|T)=t\quad\text{does not depend on $\theta$}
+$$
+\item For any function $S(\bm{X})$, the condition distribution of $S(\bm{X})$, given $T=t$ does not depend on $\theta$
+\end{enumerate}
+\end{cor}
+
+\begin{thrm}[Factorization Theorem]\label{thrm:factorization}
+Let $f_{\bm{X}}(\bm{x}|\theta)$ be joint pdf(pmf) of the data $\bm{X}$. $T=T(\bm{X})$ is sufficient for $\theta$ if and only if 
+$$
+f_{\bm{X}}(\bm{x}|\theta)=g(T(\bm{X})|\theta)h(\bm{x})\quad \forall x, \theta
+$$
+\end{thrm}
+
+As a consequence $f_T(t|\theta)=a(t)g(t|\theta)$ for some function $a(t)$ (accounting for support of $f_x$ -- prev pg theorem).
+
+\begin{exmp}[Example \ref{exmp:inspction} cont.]
+$X_i\sim i.i.d.~\text{Bernoulli}(p)$, so $f_{\bm{X}}(\bm{x}|p)=\prod_{i=1}^n\left(p^{x_i}(1-p)^{1-x_i}I_{(0,1)}(x_i)\right)=\underbrace{p^{T(\bm{x})}(1-p)^{n-T(\bm{X})}}_{g(T(\bm{x}|\theta))}\underbrace{\prod_{i=1}^nI_{(0, 1)}(x_i)}_{h(\bm{x})}$, where $T(\bm{x})=X_1+\cdots+X_n$, so $T=T(\bm{X})=X_1+\cdots+X_n$ is sufficient for $p$. $f_T(t|\theta)=\underbrace{a(t)}_{\binom{n}{t}}p^t(1-p)^{n-t}I_{\{0, 1, 2, \dots, n\}}(t)$, so $T\sim\text{Binomial}(n,p)$
+\end{exmp}
+
+
+\begin{exmp}[Example \ref{exmp:26} cont.]
+$X_i\sim i.i.d.~ \text{Exp}(\beta)$, 
+$$
+\begin{aligned}
+f_{\bm{X}}(\bm{x}|\beta)=&\prod_{i=1}^n\left\{\frac{1}{\beta}e^{-x_i/\beta}I_{(0, \infty)}(x_i)\right\}\\
+=&\underbrace{\beta^{-n}e^{-n\bar{x}/\beta}}_{g(\bar{x}|\beta)}\underbrace{\prod_{i=1}^nI_{(0, \infty)}(x_i)}_{h(\bm{x})}
+\end{aligned}
+$$
+so $\bar{X}$ is sufficient for $\theta$.
+$$
+f_{\bar{X}}(y|\beta)=\underbrace{a(y)\beta^{-n}e^{-ny/\beta}}_{\text{gamma density}}, \quad y>0
+$$
+where $a(y)=\frac{y^{n-1}}{\Gamma(n)}$.
+\end{exmp}
+
+\begin{cor}
+If $T$ is sufficient for $\theta$ and $a(t)$ is a 1-1 function than $u=a(T)$ is sufficient for $\theta$.
+\end{cor}
+\begin{proof}
+\end{proof}
+\begin{exmp}
+$T=X_1+\cdots+X_n$ is sufficient iff $\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$ is sufficient.
+\end{exmp}
+\begin{exmp}\label{exmp:210}
+$X_i\sim \text{Uniform}(a, b), \bm{\theta}=(a, b)$, then
+$$
+f_{\bm{X}}(\bm{x}|a, b)=\prod_{i=1}^n\left(\frac{1}{b-a}I_{(a, b)}(x_i)\right)=\underbrace{(b-a)^{-n}I_{(a, \infty)}(\min_{i\leqslant n}x_i)I_{(-\infty, b)}(\max_{i\leqslant n}x_i)}_{g(T(\bm{x}|a, b)}
+$$
+where $T(\bm{X})=T=(\min_{i\leqslant n}, \max_{i\leqslant n})$. So $T$ is sufficient for $(a, b)$.
+\end{exmp}
+\begin{proof}
+Proof of Theorem \ref{thrm:factorization} (Factorization Theorem).
+\end{proof}
+
+\underline{Discrete Case} -- see book.
+
+\underline{Continuous Case} -- Assume T is $m$-dimensional $m<n$ and there is an $n-m$ dimension statistic $V=V(\bm{X})$ and a 1-1 function $S(\bm{X})$ such that 
+$$
+(T, V)=S(\bm{X})
+$$
+Let $J=J(t, v)$ be the Jacobian of the  transformation $(t, v)\rightarrow s^{-1}(t, v)$
+
+\begin{enumerate}[i).]
+\item Assume $f_{\bm{X}}(\bm{x}|\theta)=g(T(\bm{x})|\theta)h(\bm{x})$.The joint density of $(T, V)$ is
+$$
+f_{T, V}(t, v|\theta)=g(t|\theta)h(s^{-1}(t, v))|J(t, v)|
+$$
+and 
+$$
+f_T(t|\theta)=g(t|\theta)\underbrace{\int_{\R^{n-m}}h(s^{-1}(t, v))|J(t.v)|dv}_{a(t)}
+$$
+so
+$$
+f_{V|T}(v|t, \theta)=\frac{f_{T,V}(t, v|\theta)}{f_T(t|\theta)}=\frac{h(s^{-1}(t, v))|T(t, v)|}{a(t)}\quad \text{does not depend on $\theta$}
+$$
+The conditional distribution of $V|T$ does not depend on $\theta$. Hence the condition distribution of $X=S^{-1}(T,V)$ given $T$, does not depend on $\theta$. Hence $T$ is sufficient.
+\item Suppose $T$ is sufficient for $\theta$. Then by Cor \ref{cor:2.7} (ii) the conditional distribution of $V=V(\bm{X})$ given $T=t$, $f_{V|T}(v|t)$ does not depend on $\theta$. Let $J^{-1}=J^{-1}(\bm{X})$ be  the Jacobian for $\bm{X}\rightarrow S(\bm{X})=(T(\bm{X}), V(\bm{X}))$. Then 
+$$
+f_{\bm{X}}(\bm{X}|\theta)=f_{T,V}(T(\bm{X}), V(\bm{X})|\theta)|J^{-1}(\bm{X})|=\underbrace{f_{V|T}(V(\bm{x}), T(\bm{X}))|J^{-1}(\bm{X})|}_{h(\bm{X})}\underbrace{f_T(T(\bm{X})|\theta)}_{g(T|\theta)}
+$$
+So the factorization holds.
+\end{enumerate}
+
+
+\subsection{For Exponential Families}
+\begin{thrm}\label{thrm:211}
+$X_i\sim i.i.d. ~f_X(x|\theta)=h(x)c(\theta)e^{w_1(\theta)t_1(x)+\cdots+w_k(\theta)t_k(x)}$, then
+$$
+T=\left(\sum_{i=1}^nt_1(x_i), \dots, \sum_{i=1}^nt_k(x_i)\right)
+$$
+is sufficient for $\Theta$.
+\end{thrm}
+\begin{proof}
+\end{proof}
+
+Example \ref{exmp:inspction} and \ref{exmp:26} fit this.
+
+\begin{exmp}\label{exmp:212}
+$X_i\sim i.i.d.~\text{N}(\mu, \sigma^2), (w/\theta=(\mu, \sigma^2))$, 
+$$
+f_{\bm{X}}(\bm{X}|\theta)=\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}=\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{\mu^2}{2\sigma^2}}e^{\frac{\mu}{\sigma^2}x-\frac{1}{2\sigma^2}x^2}
+$$
+Thus, $T=(\sum_{i=1}^nX_i, \sum_{i=1}^nX_i^2)$ is sufficient for $\theta$. $(\bar{X}, S^2)$ is a 1-1 function of $T$, so $(\bar{X}, S^2)$ is sufficient for $\theta$.
+\end{exmp}
+
+\begin{thrm}
+Suppose $T$ and $U$ are statistics and $T=a(U)$. Then 
+$$
+ T \text{ is sufficient for }\theta\Rightarrow U \text{ is sufficient for }\theta~(T \text{ is a "reduction" from } U)
+$$
+\end{thrm}
+\begin{proof}
+$$
+f_{\bm{X}}(\bm{x}|\theta)\xlongequal{\text{by factorization theorem}}g(T(\bm{x}|\theta))h(\bm{x})=g(a(U(\bm{x})|\theta))h(\bm{x})
+$$
+which satisties the factorization for $U$. Hence $U$ is sufficient.
+\end{proof}
+
+\subsection{Minimal Sufficient Statistics}
+
+idea to reduce the data as much as possible and still be sufficient (for $\theta$).
+\begin{defn}\label{defn:214}
+A statisitic $T(\bm{X})$ is minimally sufficient for $\theta$ if it is sufficient and it is a function of any(every) other sufficient statistic.
+\end{defn}
+\underline{i.e.} $U$ is sufficient for $\theta\Rightarrow T=a(U)$ for some function $a(\cdot)$.
+
+\begin{exmp}[Example \ref{exmp:212} cont.]
+$X_i\sim i.i.d.~\text{N}(\mu, \sigma^2)$, \\
+Data $\bm{X}$ is sufficient for $(\mu, \sigma^2)$.\\
+Order statistics $(X_{(1)}, X_{(2)}, \dots,X_{(n)})$ are sufficient.
+\end{exmp}
+
+We saw that 
+$$
+T=\left(\sum_{i=1}^nX_i, \sum_{i=1}^nX_i^2\right)
+$$
+is sufficient and $U=(\bar{X},S^2)$ is sufficient.
+\begin{note}
+If $\sigma^2$ is known then $\bar{X}$ is sufficient for $\mu$, If $\mu$ is known then $\frac{1}{n}\sum_{i=1}^n(X_i-\mu)^2$ is sufficient for $\sigma^2$
+\end{note}
+
+To prove minimality:
+\begin{thrm}\label{thrm:215}
+Suppose $\frac{f_{\bm{X}}(\bm{x}|\theta)}{f_{\bm{X}}(\bm{y}|\theta)}$ (positive)constant in $\theta$ iff $T(\bm{X})=T(\bm{X})$. Then $T$ is minimally sufficient for $\theta$. (implicit -- $\bm{x}$ and $\bm{y}$ both in support of $f_{\bm{X}}(\cdot|\theta))$.
+\end{thrm}
+\begin{exmp}[Example \ref{exmp:26} cont.]
+$X_i\sim i.i.d. \text{Exp}(\beta)$, $f_{\bm{X}}(\bm{x}|\beta)=\beta^{-n}e^{n\bar{x}/\beta}, x_i>0, \bar{x}=\frac{1}{n}\sum_{i=1}^nx_i$, so
+$$
+\frac{f_{\bar{X}}(\bar{x}|\beta)}{f_{\bar{X}}(\bar{y}|\beta)}=e^{-n/\beta(\bar{x}-\bar{y})}
+$$
+which is constant in $\beta$ iff $\bar{x}=\bar{y}$. Hence $T=\bar{X}$ is (minimally) sufficient for $\beta$.
+\end{exmp}
+
+\begin{exmp}[Example \ref{exmp:210} cont.]
+$X_i\sim i.i.d. \text{Unif}(a, b)$, $f_{\bar{X}}(\bar{x}|a,b)=(b-a)^nI_{(a, \infty)}(\min x_i)I_{(-\infty, b)}(\max x_i)$, then
+$$
+\frac{f_{\bar{X}}(\bar{x}|a, b)}{f_{(\bar{X})}(\bar{y}|a, b)}=1\Leftrightarrow \begin{aligned}\min x_i&=\min y_i\\
+\max x_i&=\max y_i\end{aligned}
+$$
+otherwise it is 0 or undefined. Thererfore $T=(\min_{i\leqslant n}X_i, \max_{i\leqslant n}X_i)$ is minimal sufficient for $(a,b)$.
+\end{exmp}
+
+\begin{proof}[Proof of Theorem \ref{thrm:215}]
+First, let $A=\{\bar{x}:f_{\bar{X}}(\bar{x}|\theta)>0\}$ (i.e. the support of $f(\cdot|\theta)$). If $A$ depends on $\theta$ then
+$$
+\frac{f_{\bar{X}}(\bar{x}|\theta)}{f_{\bar{X}(\bar{y}|\theta)}}
+$$
+is positive constant in $\theta$ only if both $\bar{x}\in A_{\theta}$ and $\bar{y}\in A_{\theta}$, so $I_{A_{\theta}}(\bar{x})$ must be part of $T(\bar{X})$. For fixed $t$, let $y(t)$ be a fixed sample such that $T(y(t))=t$.
+
+Define $g(t|\theta)=f_{\bm{X}}(\bm{y}(t)|\theta)$ for all $x$ such that $T(\bm{X})=t$, let 
+$$
+h(x, t)=\frac{f_{\bar{X}}(\bar{x}|\theta)}{f_{\bar{X}}(y(t)|\theta})
+$$
+which does not depend on $\theta$ by assumption with this does for arbitrary $t$, we have
+$$
+f_{\bar{X}}(\bar{x}|\theta)=h(\bar{x}, T(\bar{X}))g(T(\bar{x})|\theta)
+$$
+so $T(\bar{x})$ is sufficient for $\theta$ by the factorization theorem.
+
+Now let $U=U(x)$ be any better sufficient statistic. To show $T$ is a function of $U$, it suffices
+$$
+U(\bm{x})=U(\bm{y})\Rightarrow T(\bm{x})=T(\bm{y})
+$$
+$\exists g_1(u|\theta), h_1(\bm{x})$ such that
+$$
+f_{\bm{X}}(\bm{x}|\theta)=g_1(u(\bm{x})|\theta)h_1(\bm{x}),\quad (by factorization theorem)
+$$
+so if $U(\bm{x})=U(\bm{y})$ then
+$$
+\frac{f_{\bm{X}}(\bm{x}|\theta)}{f_{\bm{X}}(\bm{y}|\theta)}=\frac{h_1(\bm{x})}{h_1(\bm{y})}
+$$
+which is constant in $\theta$. So by assumption $T(\bm{X})=T(\bm{y})$. Thus $T$ is a function of $U$ and thus $T$ is minimal by Definition \ref{defn:214}.
+\end{proof}
+
+\subsection{For exponential families}
+\begin{thrm}\label{thrm:216}
+Suppose $f_{\bm{X}}(\bm{x}|\theta)=h^*(\bm{x})c^*(\theta)e^{w_1(\theta)t_1^*(\bm{x})+\cdots+\cdots+w_k(\theta)t_k^*(\bm{x})}$, if $a_1w_1(\theta)+\cdots+a_kw_k(\theta)=\text{constant in }\theta\Rightarrow a_1=a_2=\cdots=a_k=0$, then $T^*(t_1^*(\bm{x}),\dots, t_k^*(\bm{x})$ is minimal sufficient for $\theta$.
+\end{thrm}
+\begin{proof}
+$$
+\frac{f_{\bm{X}}(\bm{x}|\theta)}{f_{\bm{X}}(\bm{y}|\theta)}=\frac{h^*(\bm{x})}{h^*(\bm{y})}e^{\sum_{j=1}^kw_j(\theta)\underbrace{(t^*_j(\bm{x})-t_j^*(\bm{y}))}_{a_j}}
+$$
+If $T^*(\bm{x})=T^*(\bm{y})$ the ratio is independent of $\theta$. Conversely, if the ratio is independent of $\theta$, then $\sum_{j=1}^kw_j(\theta)(t^*_j(\bm{x})-t_j^*(\bm{y}))$ is constant in $\theta$. So by assumption $t^*_j(\bm{x})-t_j^*(\bm{y})=0$, Hence $T^*(\bm{x})=T^*(\bm{y})$, so $T^*$ is  minimal sufficient by Theorem \ref{thrm:215}.
+\end{proof}
+
+\begin{cor}\label{cor:216}
+If $X_i\sim i.i.d. ~f_{\bm{X}}(\bm{x}|\theta)=h(\bm{x})c(\theta)e^{w_1(\theta)t_1(\bm{x})+\cdots+w_k(\theta)t_k(\bm{x})}$, where $w_1, \dots, w_k$ satisfy (Theorem \ref{thrm:216}), then
+$$
+T=\left(\sum_{i=1}^nt_1(x_i), \dots, \sum_{i=1}^nt_k(x_i)\right)
+$$
+is minimal sufficient for $\theta$.
+\end{cor}
+\begin{proof}
+\end{proof}
+
+\begin{exmp}[Example \ref{exmp:212} cont.]
+$X_i\sim i.i.d. \text{N}(\mu, \sigma^2)$. From above we have, 
+$$
+\begin{aligned}
+w_1(\mu, \sigma^2)=&\frac{\mu}{\sigma^2}, t_1(x)=x\quad\text{ and }\\
+w_2(\mu, \sigma^2)=&-\frac{1}{2\sigma^2}, t_2(x)=x^2
+\end{aligned}
+$$
+Consider 
+$$
+a_1w_1+a_2w_2=a_1\frac{\mu}{\sigma^2}+a_2\left(-\frac{1}{2\sigma^2}\right)
+$$
+We conclude (by Corollary \ref{cor:216}) that
+$$
+T=\left(\sum{i=1}^nX_i, \sum_{i=1}^nX_i^2\right)
+$$
+is minimal sufficient for $(\mu, \sigma^2)$. Since $(\bar{X}, S^2)$ is a 1-1 function of $T$ then it is also minimal sufficient. Some special case of this example $X_i\sim i.i.d.~\text{N}(\mu, \sigma^2)$ with $\mu$ known using $w_1$ and $w_2$ from above 
+$$
+a_1\frac{\mu}{\sigma^2}+a_2\left(-\frac{1}{2\sigma^2}\right)=\text{constant for all }\sigma^2
+$$
+iff $a_1\mu=a_2$ (so that Theorem \ref{thrm:216} is not met), so instead we express the density in the form
+$$
+\begin{aligned}
+f_{X}(x|\theta)=&h(x)c(\theta)e^{-\frac{1}{2\sigma^2}(x-\mu)^2}\\
+w_1(\sigma^2)=&-\frac{1}{2\sigma^2}, t_1(x)=(x-\mu)^2
+\end{aligned}
+$$
+Hence $T=\sum_{i=1}^n(x_i-\mu)^2$ is sufficient for $\sigma^2$ (when $\mu$ is known).
+\end{exmp}
+
+\begin{exmp}
+$X_i\sim i.i.d.~\text{N}(\theta, \theta^2), \theta>0$, here, $w_1(\theta)=\frac{1}{\theta}$, $w_2(\theta)=-\frac{1}{2\theta^2}$. If $a_1\left(\frac{1}{\theta}\right)+a_2\left(-\frac{1}{2\theta^2}\right)=$constant $\theta\Rightarrow a_1=a_2=0$. Thus the minimal sufficient statistic is $\left(\sum_{i=1}^nX_i, \sum_{i=1}^nX_i^2\right)$. (even though the param. is 1-dimension)
+\end{exmp}
+
+\begin{exmp}\label{exmp:218}[Categorical Data]
+$X_i\sim i.i.d.$ categorical labels, i.e., $P(X_i=j)=p_j, \text{ for } j=1, 2, \dots,\ p_1+p_2+\cdots+p_1$.
+
+
+\subsection{Completeness}
+
+Define $N_j=$ number of observations in category $j=\sum_{i=1}^nI_{\{j\}}(x_i)$ ($N_1+N_2+\cdots+N_k=n$ is the sample size). The pmf of a single observation $X$ can be expressed as 
+$$
+f_X(x)=p_1^{I_{\{1\}}(x)}\dots p_k^{I_{\{k\}}(x)}I_{\{1, 2, \dots, k\}}(x)=I_{\{1, 2, \dots, k\}}(x)e^{(\log p_1)I_{\{1\}}(x)+\cdots+(\log p_k)I_{\{k\}}(x)}
+$$
+so this is in experimental form with $w_j(\bm{p})=\log p_j$ and $t_j(x)=I_{\{j\}}(x)$.
+
+It follows from Theorem \ref{thrm:216} that $(N_1, \dots, N_k)$ is minimal sufficient for $\bm{p}=(p_1, \dots, p_k)$. Note that $(N_1, \dots, N_k)$ can be computed from ($N_1, \dots, N_{k-1}$) (since $N_1+\cdots+N_k=n$), so $(N_1, \dots, N_{k_1})$ is also minimal sufficient.
+\end{exmp}
+
+If a minimal sufficient statistic tell us all we need to know about $\theta$ (given the parametric family) then information that does not tell us about $\theta$ is \underline{ancillary}.
+
+\begin{defn}\label{defn:219}
+An underline{ancillary} statistic $R=R(\bm{X})$ is one whose distribution does not depend on $\theta$. (i.e.,  If we observe only $R$ then we cannot say anything about $\theta$)
+\end{defn}
+
+\begin{note}
+$R_1$ is ancillary and $R_2$ is ancillary $\not\Rightarrow(R_1, R_2)$ is ancillary
+\end{note}
+
+$R$ does not have information about $\theta$, but it still has useful information. For example, it can often be used to check the validity of the model.
+
+
+\begin{exmp}[location-scale family]\label{exmp:220}
+$X_i\sim i.i.d.~f(x|\mu, \sigma)=\frac{1}{\sigma}g\left(\frac{x-\mu}{\sigma}\right)$. Then $X_i=\mu+\sigma Z_i$ where $Z_i\sim i.i.d.~g(z)$, so $\bar{X}=\mu+\sigma \bar{Z}$, $S_X=\sigma S_Z$. Consider the residuals
+$$
+\hat{Z}_i=\frac{X_i-\bar{X}}{S_X}=\frac{Z_i-\bar{Z}}{S_Z}
+$$
+$R(\bm{X})=(\hat{Z}_i,\dots, \hat{Z}_n)=\left(\frac{X_1-\bar{X}}{S_X}, \dots, \frac{X_n-\bar{X}}{S_X}\right)$ has a distribution depending only on $g(z)$ and not on $(\mu, \sigma)$. So $R$ is ancillary and can be used to check if $g(z)$ is the appropriate distribution for $Z_i$'s.
+\end{exmp}
+
+\begin{note}
+Let $M$ be the median $(\bm{X})$, 
+$$
+M=\text{median}(\bm{X}), \quad Q_1, Q_3=\text{1st and 3rd quartiles}
+$$
+Let $\tilde{R}=\left(\frac{X_1-M}{Q_3-Q1}, \dots, \frac{X_n-M}{Q_3-Q_1}\right)$ is also ancillary
+\end{note}
+
+If model is under parameterized in the right way then it may be possible to find different ways to estimate the some quantity, even if we restrict ourselves to the minimal sufficient statistic. The issue (later) is that "optimal" inference many not be unique.
+
+\begin{defn}\label{defn:221}
+\begin{enumerate}[i)]
+\item A parametric family $\{F_X(\cdot|\theta);\theta\in\Theta\}$ is \underline{complete} if $E(g(x))=0$ for all $\theta\in\Theta\Rightarrow p(g(x)=0)=1$.
+\item A statistic $T$ is \underline{complete} if its family of distributions $\{F_T(\cdot|\theta)\}$ is complete. (If so then any 1-1 function of $T$ is complete)
+\end{enumerate}
+\end{defn}
+
+"completeness" refer to completeness of the parameter space, as opposed to some limitation of $\theta$ to interpret (i): completeness says the only way to estimate $\theta$ unbiasedly is with 0 itself. If not, there can be two unbiased estimates of the some quantity.
+
+\begin{exmp}
+An $i.i.d.$ sample $(x_1, \dots, x_n)$ is never complete because $E(X_1-X_2)=0$ even though $X_1-X_2\not=0,~w.p.~1$
+\end{exmp}
+\begin{exmp}
+$f_{X}(x|\theta)=e^{\theta-x}I_{(0, \infty)}(x)$, (Note: Not an exponential family). Suppose $\exists g(x)$ such that 
+$$
+h(\theta)=E(g(x))=0, \text{  for all }\theta\in\R
+$$
+Since $h(\theta)=\int_{\theta}^\infty g(x)e^{\theta-x}\mathrm{d}x$.
+$$
+\begin{aligned}
+h(\theta)=0~\text{for all}~\theta\\
+\Rightarrow h'(\theta)=0\text{ for all }\theta\\
+\Rightarrow \int_{\theta}^\infty g(x)e^{(\theta-x)}\mathrm{d}x-g(\theta)=-g(\theta)
+\end{aligned}
+$$
+Hence $g(\theta)=0$ for all $\theta$. Hence the family is complete.
+\end{exmp} 
+
+The minimal sufficient statistic for an $i.i.d.$ sample from this family is also complete (exercise).
+
+\begin{thrm}
+Suppose 
+$$
+f_{\bm{X}}(\bm{x})=h^*(\bm{x})c^*(\theta)e^{w_1(\theta)t_1^*(\bm{X})+\cdots+w_k(\theta)t^*_k(\bm{x})}
+$$
+and the range of $w(\theta)=(w_1(\theta), \dots, w_k(\theta))$ (over $\theta$) includes an open set in $\R^k$. Then $T^*=(t^*_1(\bm{x}), \dots, t^*_k(\bm{x}))$ is complete, minimal sufficient statistic.
+\end{thrm}
+\begin{proof}
+Let $A\subset \R^k$ be an open set in the range of $w(\theta)$. Then $a_1w_1(\theta)+\cdots+a_kw_k(\theta)=$const. in $\theta\in\Theta\Rightarrow a_1=a_2=\dots=a_k=0$. 
+
+So $T^*$ is minimal sufficient by Theorem \ref{thrm:216}. We also know the family of distributions for $T^*$ has exponential form
+$$
+f_{T^*}(t|\theta)\tilde{h}(t)c^*(\theta)e^{w_1(\theta)t_1+\cdots+w_k(\theta)t_k}\quad\text{(By Theorem \ref{thrm:211})}
+$$
+Now suppose $E(g(T^*))=0$ for all $\theta\in\Theta$. Then (in continuous case),
+$$
+0=\int_{\R^k} g(\bm{t})\tilde{h}(\bm{t})\underbrace{c(\theta)}_{positive for all }e^{w_(\theta)t_1+\cdots+w_k(\theta)t_k}\mathrm{d}t
+$$
+so $0=\int_{\R^k} g(\bm{t})\tilde{h}(t)e^{w_1(\theta)t_1+\cdots+w_k(\theta)t_k}\mathrm{d}\bm{t}$ for all $w=(w_1, \dots, w_k)\in A$. This is the Laplace Transform of $g(\bm{t})\tilde{h}(\bm{t})$. 
+
+Laplace transformation are unique the only function with Laplace transformation=0 is 0 itself $\Rightarrow g(\bm{t})\tilde{h}(\bm{t})=0$ for all $t$. Hence $g(t)=0$ on support $\Rightarrow p(g(T^*)=0)=1$. So $T^*$ is complete.
+\end{proof}
+
+\begin{exmp} 
+An $i.i.d$ sample $(x_1, \dots, x_n)$ is new complete because $E(x_1-x_2)=0$ even though $x_1-x_2\not=0$ with probability 1(w.p.1)
+\end{exmp}
+
+\begin{exmp}
+$$
+f_X(x|\theta)=e^{\theta-x}I_{(0, \infty)}(x)
+$$
+(Note: not an exponential family)\\
+Suppose $\exists g(x)$ such that
+$$
+h(\theta)=E(g(x))=0\qquad\text{for all $\theta\in \R$}
+$$
+since $h(\theta)=\int_{\theta}^\infty g(x)exp(\theta-x)\mathrm{d}x$,
+$$
+h(\theta)=0\quad\text{for all } \theta\Rightarrow h'(\theta)=0\quad\text{for all }\theta=-g(\theta)
+$$
+Hence $g(\theta)=0$ for all $\theta$, Hence the family is complete.
+
+This minimal sufficient statistic for an $i.i.d$ sample from this family is also complete.
+\end{exmp}
+
+\begin{thrm}\label{thrm:222}
+Suppose $f_{\bm{X}}(\bm{x})=h^*(\bm{x})c^*(\theta)e^{w_1(\theta)t_1^*(\bm{x})+\cdots+w_k(\theta)t_k^*(\bm{x})}$ and the range of $w(\theta)=(w_1(\theta), \dots, w_k(\theta))$(over $\theta$) includes an open set in $\R^k$. Then $T^*=(t_1^*(\bm{X}), \dots, t_k^*(\bm{X}))$ is complete, minimal sufficient statistic.
+\end{thrm}
+
+\begin{proof}
+Let $A\subset \R^k$ be an open set in the range of $w(\theta)$. Then $a_1w_1(\theta)+\cdots+a_kw_k(\theta)=$const. in $\theta\in\Theta\Rightarrow a_1=a_2=\cdots=0$.
+
+So $T^*$ is minimal sufficient by the Theorem \ref{thrm:216}. We also know the family of distributions for $T^*$ has exponential form.
+$$
+f_{T^*}(t|\theta)\tilde{h}(t)c^*(\theta)e^{w_1(\theta)t_1+\cdots+w_k(\theta)t_k}~~(\text{By Theorem \ref{thrm:211}})
+$$
+
+Now suppose $E(g(T^*))=0$ for all $\theta\in \Theta$. Then (in continuous case), 
+$$
+0=\int_{\R^k}g(\bm{t})\tilde{h}(\bm{t})\underbrace{c(\theta)}_{\text{positive for all $\theta$}}e^{w_1(\theta)t_1+\cdots+w_kw(\theta)t_k}\mathrm{d}\bm{t}
+$$
+so
+$$
+0=int_{\R^k}g(\bm{t})\tilde{h}(\bm{t})e^{w_1(\theta)t_1+\cdots+w_kw(\theta)t_k}\mathrm{d}\bm{t}(\text{This is the Lapace Transformation of $g(\bm{t})\tilde{h}(\bm{t})$})
+$$
+for all $w=(w_1, \dots, w_k)\in A$.
+
+Laplace Transforms are unique the only function with Laplace transformation=0 is itself $\Rightarrow g(\bm{t})\tilde{h}(\bm{t})=0\text{ for all $t$}$, hence $g(t)=0$ on support $\Rightarrow p(g(^*(T)=0))=1$, So $T^*$ is complete.
+\end{proof}
+
+\begin{note}
+See book on likelihood principle -- more than class.
+\end{note}
+
+$$
+f_{\bm{X}}(\bm{x})=h^*(\bm{x})c^*(\theta)e^{w_1(\theta)t_1^*(\bm{x})+\cdots+w_k(\theta)t_k^*(\bm{x})}
+$$
+and range of $w(\theta)=(w_1(\theta), \dots, w_k(\theta))$ has an open set $\Rightarrow T=(t_1^*(\bm{x}),\dots, t_k^*(\bm{x}))$ is complete minimal sufficient.
+
+\begin{exmp}[Example \ref{exmp:212} cont.]
+$X_i\sim i.i.d~\text{N}(\mu, \sigma^2), \theta=(\mu, \sigma^2)\in \Theta=\R_X(0, \infty)$
+\underline{Recall}
+$$
+w_1(\theta)=\frac{\mu}{\sigma^2}, \ t^*_1(\bm{x})=\sum_{i=1^n}X_i,\  w_2(\theta)=-\frac{1}{2\sigma^2}, \ t_2^*(\bm{x})=\sum_{i=1}^nX_i^2
+$$
+The range of $(w_1(\theta), w_2(\theta))$ is $\R\times(-\infty, 0)$ which is open. Therefore $T=\left(\sum_{i=1}^nX_i, \sum_{i=1}^nX_i^2\right)$ is complete as is $(\bar{X}, S^2)$. However, if $X_i\sim\text{N}(\theta,\theta^2)$ range is $\{(\theta, \theta^2):\theta\in \R,\text{ 1 dim subspace of }\R^2\}$. Then $T$ is minimal sufficient but not complete (exercise -- hint show that $\exists g_1, g_2$ such that $E(g_1(\bar{x}))=E(g_2(\bar{x}))$).
+\end{exmp}
+
+\begin{exmp}[Example \ref{exmp:218} Categorical Data]
+$N_j=$ the number of observation in categry $j$. We noted that $N=(N_1, \dots, N_k)$ is minimal sufficient. In that, $(N_1, \dots, N_k)\sim $Multinomial$(n, p_1, p_2, \dots, p_k)$ with pmf.
+$$
+f_N(\bm{n}|\bm{p})=\frac{n!}{\prod_{j=1}^k n_j!}e^{n_1\log p_1+\cdots+n_k\log p_k}
+$$
+Since $p_1+\cdots+p_k=1$, $w(p)=(\log p_1, \dots, \log p_k)$ has a $a(k-1)$-dim range, which does not contain an open set in $\R^k$. But for fixed $n$, $N^*=(N_1, \cdots, N_{k-1})$ is a 1-1 function of $N$, and 
+$$
+f_{N^*}(\bm{n}|\bm{p})=\frac{n!}{\prod_{j=1}^k n_j!}p_k^ne^{n_1\log\left(\frac{p_1}{p_k}\right)+\cdots+n_{k-1}\log\left(\frac{p_{k-1}}{p_k}\right)}
+$$
+and  $w^*(p)=\{\log\left(\frac{p_1}{p_k}\right), \dots, \log\left(\frac{p_{k1}}{p_k}\right)\}$ is a $(k-1)-$dim vector $\frac{w}{a}$ $(k-1)$-dim range that contained an open set $\Rightarrow n^*$ is complete $\Rightarrow N$ is complete. 
+\end{exmp}
+
+\begin{thrm}\label{thrm:223}[Basu's Theorem]
+If $T$ is a complete sufficient statistic then it is independent of every ancillary statistic.
+\end{thrm}
+
+\begin{proof}
+(See Book)
+\end{proof}
+
+\begin{defn}\label{defn:224}
+For a fixed sample $\bm{X}$ define the function $L(\theta|\bm{X})=f_{\bm{X}}(\bm{X}|\theta)$ for $\theta\in \Theta$. The \underline{likelihood function} is $L(\cdot|\bm{X})$ (for a random sample $\bm{X}$).
+\end{defn}
+
+\begin{note}
+$L$ is a function of $\Theta, \bm{X}$ is given.
+\end{note}
+
+\underline{\textbf{Intuitiion}}:\\
+\underline{Discrete Case}: $L(\theta|\bm{X})=$prob. we observe sample $\bm{X}$.\\
+\underline{Continuous Case}: $L(\theta|\bm{X})\propto$ prob we observe a sample near $\bm{X}$.
+
+
+So $L(\theta|\bm{X})$ says something about how likely is our sample for a value of $\theta$.
+
+
+So it tells us which values of $\theta$ are more (or less) likely to give rise to the sample we observed. 
+
+That is, if $L(\theta_1|\bm{X})>L(\theta_2|bm{X})$ then $\theta_1$ is more plausible that $\theta_2$.
+
+\begin{exmp}
+$X_i\sim\text{N}(\mu, \sigma^2)$, 
+$$
+L(\mu, \sigma^2|\bm{X})=(2\pi\sigma^2)^{-n/2}e^{-\frac{1}{2}\sum_{i=1}^n\left(\frac{X_i-\mu}{\sigma}\right)^2}
+$$
+as a function on $\R\times(0, \infty)$.
+\end{exmp}
+\begin{exmp}
+$X_i\sim i.i.d.~\text{Bin}(m, p), i=1, \dots, n$, 
+$$
+L(p|\bm{X})=\left\{\prod_{i=1}^n\binom{m}{x_i}\right\}p^{\sum_{i=1}^nx_i}(1-p)^{nm-\sum_{i=1}^nx_i}
+$$
+\end{exmp}
+
+\begin{thrm}\label{thrm:225}
+\begin{enumerate}[i).]
+\item The likelihood function is sufficient for $\theta$;
+\item For fixed $\theta_0\in\Theta$, $\frac{L(\cdot|\bm{X})}{L(\theta_0|\bm{X})}$ is minimal sufficient for $\theta$.
+\end{enumerate}
+\end{thrm}
+
+\begin{proof}
+\begin{note}
+$L(\cdot|\bm{X})$ \underline{is} a statistic (depends only on $\bm{X}$)
+\end{note}
+but it is not finite finite dimensional. For a function $\ell(\theta)$ define $g$ by $g(\ell, \theta)=\ell(\theta)$. Then 
+$$
+f_{\bm{X}}(\bm{X}|\theta)=g(L(\cdot|\bm{X});\theta)
+$$
+so $L(\cdot|\bm{X})$ is sufficient by the factorization theorem.
+
+Now let $T(\bm{X})=\frac{L(\cdot|\bm{X})}{L(\theta_0|\bm{X})}$ ($\theta_0$ fixed). Then $T(\bm{X})=T(\bm{Y})$ $\Leftrightarrow$ $\frac{L(\theta|\bm{X})}{L(\theta_0|\bm{X})}=\frac{L(\theta|\bm{Y})}{L(\theta_0|\bm{Y})}$ for all $\theta$ $\Leftrightarrow$ $\frac{L(\theta|\bm{X})}{L(\theta|\bm{Y})}=\frac{L(\theta_0|\bm{X})}{L(\theta_0|\bm{Y})}$ for all $\theta$ $\Leftrightarrow$ $\frac{f_{\bm{X}}(\bm{X}|\theta)}{f_{\bm{Y}}(\bm{Y}|\theta)}$ is constant in $\theta$.
+So by Theorem \ref{thrm:215}, $T$ is minimal sufficient.
+\end{proof}
+
+\underline{Intuition}: It is the relative size of $L(\theta_1|\bm{X})$ and $L(\theta_2|\bm{X})$ that matter not their actual values.
+
+\begin{exmp}
+$X_i\sim i.i.d.~\text{Bin(n, p)}$, 
+$$
+L(p|\bm{X})=h(\bm{X})p^{\sim_{i=1}^nX_i}(1-p)^{n-\sum_{i=1}^nX_i}
+$$
+so if $\bm{x}$ and $\bm{y}$ are two samples such that $\sum_{i=1}^nX_i=\sum_{i=1}^ny_i$ then $\frac{L(p|\bm{x})}{L(p|\bm{y})}$ is constant in $p$.
+
+Why not just use the minimal sufficient statistic? We do!
+
+But, looking at $L(\cdot|\bm{X})$ allows we to compare the plausiblilty of different parameter values.
+\end{exmp}
+
+\subsection{Likelihood Principle}
+
+If $\frac{L(\theta|\bm{x})}{L(\theta|\bm{y})}$ is constant in $\theta$ then appropriate inference for $\theta$ should be the same for both samples.
+
+
+A stronger \underline{formal Likelihood Principle} says if there are two experiments with likelihoods $L_1(\cdot|\bm{x})$ and $L_2(\cdot|\bm{y})$, then $\frac{L_1(\theta|\bm{x})}{L_2(\theta|\bm{y})}$ is constant in $\theta$ then inferences about $\theta$ should be the same for both sets of experimental data.
+
+\begin{exmp}
+Experiment 1 -- $X_i\sim i.i.d.~ \text{Bernoulli}(p), i=1, \dots, n$; Experiment 2 -- $y\sim\text{Neg-bin}(r, p)$.
+$$
+\begin{aligned}
+\sum_{i=1}^nX_i&=\text{number of "successes" in $n$ trials}\\
+y&=\text{number of successes before $r$th failure}\\
+L_1(p|\bm{X})&=p^{\sum_{i=1}^nX_i}(1-p)^{n-\sum_{i=1}^nX_i}\\
+L_2(p|y)&=\binom{r+y-1}{r}p^r(1-p)^{y}
+\end{aligned}
+$$
+suppose we have two results such that $\sum_{i=1}^nX_i=r=n-y$, this implies both results have successes and same number of trials, then $\frac{L_1(p|\bm{x})}{L_2(p|\bm{y})}$ is constant in p and so inference "should" be the same for both data sets.
+\end{exmp}
+
+\begin{defn}\label{defn:228}
+Let $\mathscr{G}$ be a collection of 1-1 functions of $\bm{X}$ that  is closed under composition ($g_1, g_2, \in G\Rightarrow g_1(g_2(\bm{X}))\in \mathscr{G}$). Let $\mathscr{F}=\{F_X(\cdot|\theta), \theta\in \Theta\}$ parametric family of distributions. Suppose that for every $\theta\in \Theta, g\in\mathscr{G}$, there is $\bar{g}(\theta)\in \Theta$ such that
+$$
+\bm{X}\sim F_{\bm{X}}(\cdot|\theta)\text{ iff } g(\bm{X})\sim F_{\bm{X}}(\cdot|\bar{g}(\theta))
+$$
+a transformation of $\bm{X}$, iff a transformation of $\theta$ We say $\mathscr{F}$ is invariant under $\mathscr{G}$
+\end{defn}
+
+\begin{exmp}[Example \ref{exmp:220} cont. location-scale family]
+$X_i\sim i.i.d.~F\left(\frac{X-\mu}{\sigma}\right)$ where $F$ is fixed, $\mathscr{F}=$location-scale with "standard" distribution $F$. Consider $\mathscr{G}=$simple linear transformations. 
+$$
+g_{a,b}(\bm{X})=(aX_1+b, aX_2+b, \cdots, aX_n+b)\ \ [\bm{X}=(X_1, X_2, \dots, X_n)], X_1, \dots, X_n\sim i.i.d.~F\left(\frac{X-\mu}{\sigma}\right)
+$$
+iff $aX_1+b, \dots, aX_n+b\sim i.i.d.~F\left(\frac{X-(au+b)}{a\sigma}\right)$. So we see $\bar{g}_{a, b}(\mu,\sigma)=(a\mu+b, a\sigma)$, so $\mathscr{F}$ is invariant under $\mathscr{G}$.
+\end{exmp}
+
+\underline{\textbf{Invariance}}\\
+If $\mathscr{F}=\{F(\cdot|\theta), \theta\in\Theta\}$ is invariant under $\mathscr{G}$ them appropriate inference about $\theta$ based on $T(\bm{X})$ showed be invariant in the since that $T(g(\bm{X}))=\bar{g}(T(\bm{X}))$
+
+\begin{exmp}[Example \ref{exmp:220} cont. Location-scale family]
+$F=\left(\frac{X-\mu}{\sigma}\right)$. An invariant statistic $T(\bm{X})=(t_1^*(\bm{X}), t_2^*(\bm{X}))$ satisfying $T(aX_1+b, \dots, aX_n+b)=\bar{g}_{a, b}(T(\bm{X}))=(at_1^*(\bm{X})+b, at_2^*(\bm{X})_b)$.
+
+Idea $\rightarrow$ statistics that are invariant are an appropriate reduction of the data.
+\end{exmp}
+
+
+\begin{exmp}
+Consider $T(\bm{X})=(\bar{X}, S_X)$. If $Y_i=aX_i+b$. We know $\bar{Y}=a\bar{X}+b, S_y=aS_x, T(\bm{Y})=(a\bar{X}+b, aS_x)=\bar{g}_{a,b}(T(\bm{X}))$, so $(\bar{X}, S)$ is location-scale invariant.
+\end{exmp}
+
+
+\begin{exmp}
+$m(\bm{X})=$median($\bm{X}$), $Q_1(\bm{X}), Q_3(\bm{X})$=1st and 3rd quantiles, 
+$$
+U(\bm{X})=\{m(\bm{X}), (Q_3(\bm{X})-Q_1(\bm{X}))
+$$
+is location-scale invariant.
+\end{exmp}
+
+\begin{exmp}[Example \ref{exmp:212} cont.]
+$X_i\sim i.i.d.~\text{N}(\mu, \sigma^2)$. We know $(\bar{X}, S)$ is minimal sufficient. It is also invariant.
+\end{exmp}
+
+\begin{exmp}[Example \ref{exmp:210} cont.]
+$X_i\sim i.i.d.~\text{Unif}_{(a, b)}$,
+$$
+T=(\min X_i, \max X_i)
+$$
+is minimal sufficient, but not invariant. To find an invariant function of $T$. a location parameter -- $a$, a scale parameter -- $b-a$.
+$$
+U(\bm{X})=(\min X_i, \max X_i-\min X_i)
+$$
+is location-scale invariant and minimal sufficient.
+\end{exmp}
+
+\section{Chapter 7}
+\subsection{Estimation Techniques}
+estimation $\rightarrow$ identify a plausible value of the parameters.
+
+(parameter = Characteristic of the distribution of the data, not necessarily the parameter of a parametric family.)
+
+
+\begin{defn}\label{defn:31}
+Suppose $\bm{X}\sim F_X$, $F_{\bm{X}}\in\mathscr{F}=$family of distributions. Let $\theta$ be any parameter. A \underline{point estimator} of $\theta$ is a statistic $\hat{\theta}=\hat{\theta}(\bm{X})$ that identifies possible/plausible values for $\theta$.
+\end{defn}
+\begin{note}
+$\mathscr{F}$ need not be a parametric family. The value of $\hat{\theta}(\bm{X})$ need not always be legitimate. (in the set of possible parameter values.)
+\end{note}
+
+\underline{\textbf{Questions}}\\
+\begin{enumerate}[1)]
+\item -- to identify potential useful estimates;
+\item -- to determine their properties to see which are "best".
+\end{enumerate}
+
+\subsection{Moment Estimotor}
+\begin{defn}[Moments]\label{defn:32}
+$\hat{m}_k=\frac{1}{n}\sum_{i=1}^nX_i^k$ is use to estimate $m_k=E(X^k)$.
+\end{defn}
+$\hat{m}_1=\bar{X}$ estimator of $\mu=E(X)$, $\sigma^2=var(X)=m_2-m_1^2\Rightarrow\hat{\sigma}^2=\hat{m}_2-\hat{m}_1^2=\frac{1}{n}\sum_{i=1}^n(X_i-\bar{X})^2=\frac{n-1}{n}S^2$.
+
+If $\theta=g(m_1, \dots, m_k)$ then a moment estimator of $\theta$ is $\hat{\theta}=g(\hat{m}_1, \dots, \hat{m}_k)$,  (these need not be unique)
+
+\begin{exmp}\label{exmp:33}
+$X_i\sim i.i.d. ~\text{Exp}(\beta)$, $m_1=E(X)=\beta\Rightarrow=\hat{m}_1=\bar{X}$.\\
+Alternatively, $m_2=E(X^2)=2\beta^2\Rightarrow$ solving for $\beta, \hat{\beta}=\sqrt{\frac{\hat{m}_2}{2}}$.
+\end{exmp}
+
+\begin{exmp}\label{exmp:34}
+$X_i\sim i.i.d. \text{Gamma}(\alpha, \beta), \theta=(\alpha, \beta) (\text{2-dim}\Rightarrow \text{ using} m_1\not=m_2$), $m_1=E(X)=\alpha\beta$, $m_2=E(X^2)=\alpha(\alpha+1)\beta^2$, solving for $\alpha$ and $\beta$:
+$$
+\alpha=\frac{m_2^2}{m_2-m_1^2}, \beta=\frac{m_2-m_1^2}{m_1}
+$$
+
+so we can use 
+$$
+\begin{aligned}
+&\hat{alpha}=\frac{\hat{m}_1^2}{\hat{m}_2-\hat{m}_1^2}, \hat{\beta}=\frac{{m}_2-\hat{m}_1^2}{\hat{m}_1}\\
+\Rightarrow&\hat{alpha}_1=\frac{\bar{X}^2}{\hat{\sigma}^2}, \hat{\beta}=\frac{\hat{\sigma}^2}{\bar{X}}\\
+\end{aligned}
+$$
+\end{exmp}
+
+\begin{exmp}\label{exmp:35}
+$X_i\sim i.i.d.~\text{NegBin}(r, p), 0<p<1, r>0$, 
+$$
+f(X|r, p)=\frac{\Gamma(r+x)}{\Gamma(r)}p^r(1-p)^x, x = 0, 1, 2, \dots
+$$
+
+$m_1=E(X)=\frac{r(1-p)}{p}$, solve for $r$ and $p$, 
+$$
+p=\frac{m_1}{m_2-m_1^2},\quad r=\frac{m_1^2}{m_2-m_1^2-m_1}
+$$
+so we can use (with $\hat{\sigma}^2=\hat{m}_2-\hat{m}_1^2, \bar{X}=\hat{m}_1$), 
+$$
+\hat{p}=\frac{\bar{X}}{\hat{\sigma}^2}, \quad \hat{r}=\frac{\bar{X}^2}{\hat{\sigma}^2-\bar{X}}
+$$
+
+It is possible that $\hat{p}>1$ and $\hat{r}<0$. (This is an example where moment estimators can give inappropriate values.)
+\end{exmp}
+
+It you allow transformations, the method of moments because quite general.
+
+Let $u_j=E(h_j(X)), \hat{u}_j=\frac{1}{n}\sum_{i=1}^n h_j(x_i)$ ($\bar{y}$ where $y_i=h_j(x_i)$). If $\theta=t(u_1, \dots, u_k)$ then use $\hat{\theta}=t(\hat{u}_1, \dots, \hat{u})$.
+
+
+\begin{exmp}\label{exmp:36}
+$X_i\sim\text{lognormal}(\mu, \sigma^2)$. We can get estimators by the ordinary method of moments. Solving $\hat{m}_1=e^{\hat{\mu}+\frac{\sigma^2}{2}}, \hat{m}_2=e^{2\hat{\mu}+2\hat{\sigma}^2}$. For $\hat{mu}+\hat{\sigma}^2$ (not the sample moments) or we can remember that $Y=\log X\sim\text{N}(\mu,\sigma^2)$ and use $\hat{\mu}=\bar{Y}=\frac{1}{n}\sum_{i=1}^n\log X_i$, and $\hat{\sigma}^2=\text{sample variance of $Y$'s}=\frac{1}{n}\sum_{i=1}^n(\log X_i-\hat{\mu})^2$.
+\end{exmp}
+
+
+
+\begin{exmp}[Example \ref{exmp:35} cont.]
+$X_i\sim \text{NegBin(r, p)}$, Consider $h_1(x)=\left(\frac{1}{2}\right)^x, h_2=\left(\frac{1}{3}\right)^x$. Since $u_1=E(h_1(X))=\left(\frac{p}{1-\frac{1}{2}(1-p)}\right)^r, u_2=E(h_2(X))=\left(\frac{p}{1-\frac{1}{3}(1-p)}\right)^r$. Solve $\left(\frac{\hat{p}}{1-\frac{1}{2}(1-\hat{p})}\right)^{\hat{r}}=\frac{1}{n}\sum_{i=1}^n\left(\frac{1}{2}\right)^{x_i}$ and $\left(\frac{\hat{p}}{1-\frac{1}{3}(1-\hat{p})}\right)^{\hat{r}}=\frac{1}{n}\sum_{i=1}^n\left(\frac{1}{3}\right)^{x_i}$
+\end{exmp}
+
+\begin{exmp}\label{exmp:37}
+$X_i\sim i.i.d.~\text{Categorical with categories 1,2, \dots, k}, P_j=P(X=j)$, Let $h_j(x)=I_{\{j\}}(x)$, $u_j=E\{h_j(x)\}=P(X=j)=p_j$. Moment type estimator is 
+$$
+\hat{p}_j=\frac{1}{n}\sum_{i=1}^nh_j(x_i)=\frac{\text{number of data in categ. j}}{n}=\text{sample relative frequency for category j}
+$$
+\end{exmp}
+
+\underline{Advantages of Moment Estimators}
+\begin{enumerate}[1)]
+\item generally easy to define, compute;
+\item have a single justification;
+\item always legitimate for moments, includes  "central";
+\item basic properties are easy to determine -- based on properties averages;
+\item very flexible -- we can be creative by using various transformations.
+\end{enumerate}
+
+\underline{Disadvantage of Moment Estimators}
+\begin{enumerate}[1)]
+\item May give inappropriate;
+\item Many possibilities and not necessarily clear which to use;
+\item Do not have to be functions of the minimal sufficient statistics.
+\end{enumerate}
+
+
+\begin{thrm}\label{thrm:38}
+$f_{\bm{X}}(\bm{x}|\theta)=h(\bm{x})c(\theta)e^{w_1(\theta)t_1(x)+\cdots+w_k(\theta)t_k(\theta)}$, suppose that $\Theta$ is an open subset of $\R^k$($\theta$ is $k$-dim), $\theta\rightarrow w(\theta)=(w_1(\theta), \dots, w_k(\theta))$ is 1-1 differentiable and matrix of derivatives
+$$
+D(\theta)=\left[\left(\frac{\partial w}{\partial \theta}\right)\right]_{k\times k}=\left(\begin{matrix}
+\frac{\partial w_1}{\partial \theta_1} &\cdots &\frac{\partial w_k}{\partial \theta_1}\\
+\vdots &\ddots &\vdots\\
+\frac{\partial w_1}{\partial \theta_k} &\cdots &\frac{\partial w_k}{\partial \theta_k}
+\end{matrix}\right)
+$$
+is invertible for all $\theta\in\Theta$. Let $T^*=(t_1^*(\bm{X}), \dots, t_k^*(\bm{X}))$, Then $\bm{E}(T^*)=-(D(\theta))^{-1}\left(\frac{\partial}{\partial \theta}\log c(\theta)\right)$.
+\end{thrm}
+
+\begin{proof}
+$f_{T^*}(\bm{t})=c(\theta)h_{T^*}(\bm{t})e^{w_1(\theta)t_1+\cdots+w_k(\theta)t_k}$ for some $h_{T^*}(\bm{t})$, so $\frac{1}{c(\theta)}=\int_{\R^k} h_{T^*}(\bm{t})e^{w_1(\theta)t_1+\cdots+w_k(\theta)t_k}\mathrm{d}t \text{ (sum if discrete)}$. Thus, 
+$$
+\begin{aligned}
+\frac{\partial}{\partial \theta_j}\left(\frac{1}{c(\theta)}\right)&=\int_{\R^k}h_{T^*}(\bm{t})\left\{\frac{\partial}{\partial \theta_j}w_1(\theta)t_1+\cdots+\frac{\partial}{\partial \theta_j}w_k(\theta)\right\}e^{w_1(\theta)t_1+\cdots+w_k(\theta)t_k}\mathrm{d}\bm{t}\\
+&=\frac{1}{c(\theta)}E\left(\frac{\partial}{\partial \theta_j}w_1(\theta)t_1^*(\bm{x})+\cdots+\frac{\partial}{\partial \theta_j}w_k(\theta)t_k^*(\bm{x})\right)
+\end{aligned}
+$$
+so
+$$
+\left(\begin{matrix}
+-\frac{\partial}{\partial \theta_1}\log c(\theta)\\
+-\frac{\partial}{\partial \theta_2}\log c(\theta)\\
+\vdots\\
+-\frac{\partial}{\partial \theta_k}\log c(\theta)
+\end{matrix}\right)=D(\theta)\left(\begin{matrix}
+E(t_1^*(\bm{x}))\\
+E(t_2^*(\bm{x}))\\
+\vdots\\
+E(t_k^*(\bm{x}))
+\end{matrix}\right)
+$$
+\end{proof}
+
+
+Exponential family for $\bm{X}$, $\Theta=$open subset of $\R^k\Rightarrow T^*=(t_1^*(\bm{X}), \dots, t_k^*(\bm{X}))$ be a mean depending on $\theta$ suggest solving
+$$
+t_j^*(\bm{X})=E(t_j(\bm{X})), j=1, \dots, k
+$$
+
+\begin{cor}\label{cor:39}
+If $X_i\sim i.i.d.~f(x|\theta)=h(x)c(\theta)e^{w_1(\theta)t_1(x)+\cdots+w_k(\theta)t_k(x)}$. Let $\bar{T}^*=\left(\frac{1}{n}\sum t_1(x_i), \dots, \frac{1}{n}\sum t_k(x_i)\right)$. Then, under assumptions/terminology of Theorem \ref{thrm:38}, 
+$$
+E(\bar{T}^*)=-(D(\theta))^{-1}\frac{\partial}{\partial \theta}\log c(\theta)
+$$
+\end{cor}
+
+
+\begin{exmp}\label{exmp:310}
+$X_i\sim i.i.d.~\text{Geometric}(p)$, $f(x|p)=p(1-p)^{x-1}I_{\{1, 2, \dots\}}(x)$, here $c(p)=\frac{p}{1-p}$, $w_1(p)=\log(1-p)$, $t_1(x)=x$. Here $\bar{T}^*=\frac{1}{n}\sum_{i=1}^nX_i=\bar{X}$. (We already know $E(\bar{X})=E(X_1)=\frac{1}{p})$. 
+$$
+D(p)=w_1'(p)=-\frac{1}{1-p}, \frac{\mathrm{d}}{\mathrm{d}p}\log c(p)=\frac{1}{p}+\frac{1}{1-p}=\frac{1}{p(1-p)}
+$$
+so by corollary, 
+$$
+E(\bar{X})=-\left(-\frac{1}{1-p}\right)^{-1}\left(\frac{1}{p(1-p)}\right)=\frac{1}{p}
+$$
+so $\bar{X}$ estimates $\frac{1}{p}\Rightarrow \hat{p}=\frac{1}{\bar{X}}$.
+\end{exmp}
+
+\begin{exmp}[Example \ref{exmp:34} cont.]
+$X_i\sim i.i.d.~\text{Gamma}(\alpha, \beta)$, 
+$$
+f(x|\alpha, \beta)=\frac{\beta^{-\alpha}}{\Gamma(\alpha)}e^{-\frac{1}{\beta}x+(\alpha-1)\log x}, x>0
+$$
+Here $\bar{T}^*=(\bar{X}, \frac{1}{n}\sum_{i=1}^n\log X_i)$.
+$$
+\begin{aligned}
+E(\bar{X})&=E(X_1)=\alpha\beta\\
+E\left(\frac{1}{n}\sum_{i=1}^n\log X_i\right)&=E(\log X_i)=\int_0^\infty\log x\frac{x^{\alpha-1}}{\beta^\alpha\Gamma(\alpha)}e^{-\frac{x}{\beta}}\mathrm{d}x\\
+&=\log\beta+\int_0^\infty\log y\frac{y^{\alpha-1}}{\Gamma(\alpha)}e^{-y}\mathrm{d}y\\
+&=\log\beta+\frac{1}{\Gamma{\alpha}}\frac{\mathrm{d}}{\mathrm{d}\alpha}\int_0^\infty y^{\alpha-1}e^{-y}\mathrm{d}y\\
+&=\log\beta+\frac{\Gamma'(\alpha)}{\Gamma(\alpha)}
+\end{aligned}
+$$
+The resulting estimator then solve (numerically)
+$$\begin{aligned}
+\bar{X}&=\hat{\alpha}\hat{\beta}\\
+\frac{1}{n}\sum_{i=1}^n\log X_i&=\log\hat{\beta}+\frac{\Gamma'(\hat{\alpha})}{\Gamma(\hat{\alpha})}
+\end{aligned}$$
+\end{exmp}
+
+
+\subsection{Quantile estimator}
+This method is analogous to method of moments. \\
+idea: $\hat{x}_p$ (sample $p$th quantile) estimates $x_p$, satisfies $F(x_p)\geqslant p, p(X\geqslant x_p)\geqslant 1-p$ (for continuous $F:F(x_p)=p$)\\
+If $\theta=h(x_{p_1}, \dots, x_{p_k})$ then $\hat{\theta}=h(\hat{x}_{p_1}, \dots, \hat{x}_{p_k})$ is a quantile estimator of $\theta$.
+
+\begin{exmp}\label{exmp:312}
+$X_i\sim i.i.d~\text{Pareto}(\alpha, \beta)$, $F(X|\alpha, \beta)=1-\left(\frac{x}{\alpha}\right)^{-\beta}$ for $X>\alpha$. Solve $F(x_p)=p\Rightarrow x_p=\alpha(1-p)^{-\frac{1}{\beta}}$. Let $p_1=.1, p_2=.9$, solve 
+$$
+\hat{x}_{.1}=\hat{\alpha}\left(\frac{1}{.9}\right)^{\frac{1}{\hat{\beta}}}, \hat{x}_{.9}=\hat{\alpha}\left(\frac{1}{.1}\right)^{\frac{1}{\hat{\beta}}}
+$$
+to get 
+$$
+\hat{\alpha}=\frac{\hat{x}_{.9}}{10^{\frac{1}{\hat{\beta}}}}, \hat{\beta}=\frac{2\log 3}{\log \hat{x}_{.9}-\log\hat{x}_{,1}}
+$$
+Like moment estimators, quantiles can be easy(simple) but they can also be naive.
+\end{exmp}
+
+\subsection{Maximum Likelihood}
+Assume we have a parametric family $\{F(\cdot|\theta)\}$, $\hat{\theta}=\hat{\theta}(\bm{X})$ is called a maximum likelihood estimator if it maximizes $L(\cdot|X)$, 
+$$
+L(\hat{\theta}|\bm{X})\geqslant L(\theta|\bm{X})\qquad \text{for every } \theta\in \Theta
+$$
+\underline{and} $\hat{\theta}\in\bar{\Theta}\leftarrow$ closure of $\theta$.
+
+
+\underline{Intuition}: We said $\theta_1$ is "more plausible" than $\theta_2$ if $L(\theta_1|\bm{X})\geqslant L(\theta_2|\bm{X})$, The "most plausible" value for $\theta$ is the MLE.
+
+
+\begin{exmp}\label{exmp:314}[Simple urn example]
+Suppose an urn has 2 marbles -- black or white marbles. Parameter $M=$number of block marbles in urn. Select 1 marbles at random.
+$$
+\hat{M}(x)=\left\{\begin{aligned}&2,\qquad \text{if }x=B\\
+&0,\qquad \text{if }x=W
+\end{aligned}\right.
+$$
+If $X=B$, $L(M|B)$ is maximized with $\hat{M}=2$;\\
+If $X=W$, $L(M|W)$ is maximized with $\hat{M}=0$.
+\end{exmp}
+
+\begin{exmp}\label{exmp:315}
+$X_i\sim\text{Bernoulli}(p)$, parameter space is usually $(0, 1)$,
+$$
+L(p|\bm{X})=f(\bm{X}|p)=p^{x_1+x_2+\cdots+x_n}(1-p)^{n-(x_1+\cdots+x_n)}=p^{n\bar{x}}(1-p)^{n(1-\bar{x})}
+$$
+Want to maximize this in $p$ ($\bar{x}$ fixed). Maximizing $L$ is equivalent to maximizing $\log L$
+$$
+\log L(p|\bm{X})=n\bar{x}\log p+n(1-\bar{x})\log (1-p)
+$$
+
+\underline{3 Steps}
+\begin{enumerate}[1).]
+\item Solve $0=\frac{\partial}{\partial p}\log L(p|\bm{X})\big|_{p=\tilde{p}}=\frac{n\bar{x}}{\hat{p}}-\frac{n(1-\bar{x})}{1-\hat{p}}\Rightarrow \hat{p}=\bar{x}$;
+\item Check that solution is a local maximum
+$$
+\frac{\partial^2}{\partial p^2}\log L(p|\bm{x})=-\frac{n\bar{x}}{p^2}-\frac{n(1-\bar{x})}{(1-p)^2}<0\qquad\text{for all }p
+$$
+so $\log L$ has a unique maximum.
+\item verify uniqueness and/or check all solutions, including possible solutions on the boundary of $\Theta$. $\theta=(0, 1)$ points $p=0, p=1$
+$$
+\begin{aligned}
+\log L(0|\bm{x})&=-\infty\quad \text{if }\bar{x}\not=0 (\bar{x}=0\Rightarrow \hat{p}=0)\\
+\log L(1|\bm{x})&=-\infty\quad \text{if }\bar{x}=1
+\end{aligned}
+$$
+Maximum likelihood estimator (MLE) is $\hat{\theta}$ that maximizes $L(\cdot|\bm{X})$
+\end{enumerate}
+\end{exmp}
+
+\begin{exmp}\label{exmp:316}
+$X_i\sim i.i.d.~\text{U}(a, b)$, $a$ and $b$ are unknown not related to each other. $f(x)=\frac{1}{b-a}I_{(a, b)}(x)\quad\text{use}\quad\frac{1}{b-a}I_{[a, b]}(x)$.
+$$
+L(a, b|\bm{x})=f(\bm{x}|a, b)=I_{[a, \infty)}(\min x_i)I_{(-\infty, b]}(\max x_i)(b-a)^{-n}
+$$
+note first that we have $a\leqslant \min(x_i)$, $b\geqslant \max(x_i)$, (otherwise $L(a, b|\bm{x})=0$ does not give maximum).
+
+We can set derivatives equal to 0
+$$
+\left.\begin{aligned}
+0&=\frac{\partial L}{\partial a}=n(b-a)^{n-1}\\
+0&=\frac{\partial L}{\partial b}=n(b-a)^{n-1}
+\end{aligned}\right\}\Rightarrow b-a=\infty\Rightarrow L=0
+$$
+In fact, this gives a minimum solution. However, $L(a, b|\bm{X})$ is maximized when taking $(b-a)$ as small as possible
+$$
+\Rightarrow \hat{a}=\min(x_i), \hat{b}=\max(x_i)
+$$
+\end{exmp}
+
+
+\begin{exmp}\label{exmp:317}
+$X_i\sim\text{N}(\mu, \sigma^2)$. Let $\gamma=\sigma^2$, 
+$$
+\begin{aligned}
+L(\mu, \gamma|\bm{X})&=(2\pi\gamma)^{-\frac{n}{2}e^{-\frac{\sum_{i=1}^n(x_i-\mu)^2}{2\gamma}}}\\
+\log L(\mu, \gamma|\bm{X})&=\ell(\mu, \gamma|\bm{X})=\frac{-n}{2}\log(2\pi\gamma)\frac{-\sum_{i=1}^n(x_i-\mu)^2}{2\gamma}\\
+0&=\frac{\partial\ell}{\partial\mu}\big|_{\hat{\mu}}=\frac{1}{\gamma}\sum_{i=1}^n(x_i-\hat{\mu})=\frac{n}{\gamma}(\bar{x}-\hat{\mu})\Rightarrow\hat{\mu}=\bar{x}
+\end{aligned}
+$$
+To show this maximized $\ell$(for any $\sigma$) we can compare 
+$$
+\begin{aligned}
+\ell(\hat{\mu}, \sigma|\bar{x})-\ell(\mu, \sigma|\bm{x})=\frac{1}{2\gamma}\left(-\sum_{i=1}^n(x_i-\bar{x})^2+\sum_{i=1}^n(x_i-\mu)^2\right)=\frac{n}{2\gamma}(\bar{x}-\mu)^2\geqslant 0
+\end{aligned}
+$$
+Next plug $\hat{\mu}$ into $\ell$ and maximize over $\gamma$
+$$
+0=\frac{\partial \ell}{\partial \gamma}\big|_{\hat{\mu}, \hat{\gamma}}=\frac{-n}{2\hat{\gamma}}=\frac{1}{2\hat{\gamma}^2}\sum_{i=1}^n(x_i-\bar{x})^2\Rightarrow \hat{\gamma}=\hat{\sigma}^2=\frac{1}{n}\sum_{i=1}^n(x_i-\bar{x})^2
+$$
+To show this maximizes $\ell$, look at $\frac{\partial^2\ell}{\partial\gamma^2}$ and show it is $<0$ for all $\gamma(\mu=\hat{\mu})$
+\end{exmp}
+
+\begin{exmp}
+$X_i\sim i.i.d\text{Cauthy} w/\text{scale } \sigma\quad(c=\frac{1}{\sigma})$, 
+$$
+\begin{aligned}
+f(x)&=\frac{1}{\pi}\frac{c}{1+c^2x^2}\\
+L(c|\bm{x})&=\pi^{-n}c^n\prod_{i=1}^n(1+c^2x_i^2)^{-1}\\
+\ell(c|\bm{x})&=-n\log\pi-n\log c-\sum_{i=1}^n\log(1+c^2x_i^2)\\
+0&=\frac{\partial \ell}{\partial c}=\frac{n}{c}-\sum_{i=1}^n\frac{2x_i^2c}{1+c^2x_i^2}\\
+&\Rightarrow\frac{1}{n}\sum_{i=1}^n\frac{c^2x_i^2}{1+c^2x_i^2}=\frac{1}{2}
+\end{aligned}
+$$
+\end{exmp}
+
+\begin{thrm}\label{thrm:318}
+If unique, the MLE is a function of the minimal sufficient statistic.
+\end{thrm}
+\begin{proof}
+Fix $\theta_0\in\Theta$, $\hat{\theta}$ is the unique maximizer of 
+$$
+\frac{L(\cdot|\bm{x})}{L(\theta_0|\bm{x})}
+$$
+which is minimal sufficient.
+\end{proof}
+
+An important feature of MLE's is their \underline{invariant}. \\
+Idea: If $g(\theta)$ is any function of $\theta$ then the MLE for $\gamma=g(\theta)$ is $\hat{\gamma}=g(\hat{\theta})$.
+
+\begin{thrm}[Invariance of MLE's]\label{thrm:319}
+The value of $\gamma$ which maximizes $\sup_{\theta|g(\theta)=\gamma}L(\theta|\bm{x})$ is $\hat{\gamma}=g(\hat{\theta})$. 
+\end{thrm}
+\begin{proof}
+By definition:
+$$
+\sup_{\theta:g(\theta)=\hat{\gamma}}=\sum_\gamma\sup_{\theta:g(\theta)=\gamma}L(\theta|\bm{x})=L(\hat{\theta}|\bm{x})\geqslant \sup_{\theta:g(\theta)=\gamma}L(\theta|\bm{x})\qquad\text{for any }\gamma
+$$
+\end{proof}
+
+\begin{exmp}[Example \ref{exmp:317} cont.]
+$X_i\sim i.i.d.\text{N}(\mu, \sigma^2)$, MLE is $(\hat{\mu}, \hat{\sigma}^2)=(\bar{X}, \frac{1}{n}\sum_{i=1}^n(x_i-\bar{x})^2)$, so MLE of $\sigma=\sqrt{\sigma^2}$ is $\hat{\sigma}=\sqrt{\hat{\sigma}}$, 
+$$
+\begin{aligned}
+\text{MLE of CV}&=\frac{\sigma}{\mu}=\frac{\hat{\sigma}}{\hat{\mu}}\\
+\text{MLE of }E(X^2)&=\sigma^2+\mu^2=\hat{\sigma}^2+\hat{\mu}^2=\frac{1}{n}\sum_{i=1}^nx_i^2
+\end{aligned}
+$$
+\end{exmp}
+
+
+\begin{exmp}[Example \ref{exmp:310} cont.]
+$X_i\sim i.i.d. \text{Geometric}(p)$, 
+$$
+\begin{aligned}
+&\text{MLE of }p\text{ is }\frac{1}{\bar{x}}=\hat{p}(\text{verify})\\
+&\text{MLE of }E(X)=\frac{1}{p}\text{ is }\frac{1}{\hat{p}}=\bar{x}
+\end{aligned}
+$$
+\end{exmp}
+
+\begin{thrm}\label{thrm:320}
+MLEs for exponential families (assume as in Theorem \ref{thrm:38}) $\theta=(\theta_1, \dots, \theta_k)$,
+$$
+f_X(\bm{X}|theta)=h(\bm{x})c(\theta)e^{w_1(\theta)t_1(\bm{x})+\cdots+w_k(\theta)t_k(\bm{x})}
+$$
+Let $D(\theta)=\left[\frac{\partial w_j}{\partial \theta_j}\right]_{i, j}\quad(k\times k\text{ matrix})$ is invertible for all $\theta$.
+$$
+G(\theta)=\left(\frac{\partial}{\partial \theta_i}\log c(\theta)\right)_i\quad(k\times 1\text{ vector})
+$$
+The MLE for $\theta$ solves the $k$ equations
+$$
+E(t_j^*(\bm{x}))|_{\theta=\hat{\theta}}=t_j^*(\bm{x})
+$$
+These were modified moment equations discussed in Theorem \ref{thrm:38}. In particular ($i.i.d.$ case), if $x_i\sim i.i.d.~f(x|\theta)=h(\bm{x})c(\theta)e^{w_1(\theta)t_1(\bm{x})+\cdots+w_k(\theta)t_k(\bm{x})}$, then the MLE $\hat{\theta}$ satifies
+$$
+E(t_j(\bm{x}))|_{\theta=\hat{\theta}}=\frac{1}{n}\sum_{i=1}^nt_j(x)
+$$
+\end{thrm}
+\begin{proof}
+$$
+\begin{aligned}
+0&=\frac{\partial\ell(\theta|\bm{x})}{\partial \theta}\\
+&=\frac{\partial}{\partial \theta}\left\{\log h(\bm{x})+\log c(\theta)+w_1(\theta)t_1(\bm{x})+\cdots+w_k(\theta)t_k(\bm{x})\right\}\\
+&=G(\theta)+D(\theta)T^*, \qquad T^*=(t_1^*(\bm{x}), \dots, t_k^*(\bm{x}))
+\end{aligned}
+$$
+so $\hat{\theta}$ solves
+$$
+T^*=-D(\hat{\theta})^{-1}G(\hat{\theta})=E(T^*)|_{\theta=\hat{\theta}}
+$$
+\end{proof}
+
+$X_i\sim i.i.d.~f(x|\theta)=h(x)c(\theta)e^{w_1(\theta)t_1(x)+\cdots+w_k(\theta)t_k(x)}$, $\theta$ is $K$-dim.
+
+MLEs satisfy
+$$
+E(t_j(x))|_{\hat{\theta}}=\frac{1}{n}\sum_{i=1}^nt_j(x_j)
+$$
+
+\begin{exmp}[Example \ref{exmp:34} cont.]
+$x_i\sim \text{Gamma}(\alpha, \beta)$. Recall $\bar{T}=\left(\frac{1}{n}\sum_{i=1}^n X_i, \frac{1}{n}\sum_{i=1}^n\log(x_i)\right)$ is minimal sufficient. MLE satisfies
+$$
+\hat{\alpha}\hat{\beta}=E(X)|_{\hat{\alpha}\hat{\beta}}=\bar{x}
+$$
+and
+$$
+E(\log(x))|_{\hat{\alpha}\hat{\beta}}=\frac{1}{n}\sum_{i=1}^n\log x_i
+$$
+based on earlier computation.
+\end{exmp}
+
+\begin{exmp}\label{exmp:318}
+$X_i\sim\text{Cauchy with location } m$, 
+$$
+\begin{aligned}
+f(x|m)&=\frac{1}{\pi}\frac{1}{1+(x-m)^2}\\
+\ell(m|\bm{x})&=\log L(m|\bm{x})=-n\log\pi-\sum_{i=1}^n\log\left(1+(x_i-m)^2\right)
+\end{aligned}
+$$
+solve
+$$
+0=\frac{\partial \ell}{\partial m}|_{\hat{m}}=2\sum_{i=1}^n\frac{x_i-\hat{m}}{1+(x_i-\hat{m})^2}
+$$
+which can have many solutions. Find all solutions and identify which gives the max.
+
+$X_i\sim i.i.d~\text{Cauchy scale }c^{-1}$, 
+$$
+\begin{aligned}
+f(x|c)&=\frac{c}{\pi}\frac{1}{1+c^2x^2}\\
+\ell(c|\bm{x})&=n\log\left(\frac{c}{\pi}\right)-\sum_{i=1}^n\log(1+c^2x_i^2)
+\end{aligned}
+$$
+solve
+$$
+\begin{aligned}
+&0=\frac{\partial \ell}{\partial c}\big|_{\hat{c}}=\frac{n}{\hat{c}}-2\sum_{i=1}^2\log(1+c^2x_i^2)\\
+\Rightarrow&\frac{1}{n}\sum_{i=1}^n\frac{\hat{c}^2x_i^2}{1+\hat{c}^2x_i^2}=\frac{1}{2}
+\end{aligned}
+$$
+which has a unique solution.
+\end{exmp}
+
+
+\subsection{M-Estimation of a location}
+Idea: For a suitable function $\rho(x, \theta)$, minimize
+$$
+\sum_{i=1}^n\rho(x_i, \theta)\qquad\text{with respect to }\theta
+$$
+
+\begin{exmp}
+Least squares $\rho(x, \theta)=(x-\theta)^2$. (In fact, this is the MLE of the normal distribution).
+\end{exmp}
+
+\begin{exmp}
+Least absolute deviation $\rho(x, \theta)=|x-\theta|$, minimize $h(\theta)=\sum_{i=1}^n|x_i-\theta|\Rightarrow \hat{\theta}=\text{median}(\bm{x})$. (hint. $h(\theta)$ is continuous and piecewise linear identify for which values of $\theta$, $h'(\theta)<0$ and for which values of $\theta$, $h'(\theta)>0$).
+\end{exmp}
+
+
+
+\begin{exmp}
+$\rho(x, \theta)=-\log f(x|\theta)\Rightarrow \hat{\theta}$ is MLE
+\end{exmp}
+
+
+P56/0223
+\section{tt}
+
+
+\begin{thrm}\label{thrm:436}
+ttttt
+\end{thrm}
+\begin{thrm}\label{thrm:437}
+ttttt
+\end{thrm}
+\begin{cor}\label{cor:438}
+ttttt
+\end{cor}
+\begin{thrm}\label{thrm:439}
+ttttt
+\end{thrm}
+
+
+
+
+
+\section{Chapter 8}
+
+\underline{Issue} -- The point of statistics is to make a conclusion about the model (population) and to do it in a way that is justifiable.
+
+\begin{defn}\underline{Hypothesis} -- A statement about the model.
+\end{defn}
+
+\underline{Null hypothesis} -- $H_0$;\\
+\underline{Research (Alternative hypothesis)} -- $H_1$;\\
+Objective is to choose between them.
+
+$H_0$ and $H_1$ are mutually exclusive.
+
+\begin{exmp}\label{exmp:52}
+$Y=$avg. lifetime of new light bulb. Engineers claim $E(Y)=\mu>2000$ hours. Thus, the research hypothesis is $H_1:\mu>2000$, the null hypothesis can be $H_0:\mu \leqslant 2000$.\\
+$$
+\begin{aligned}
+\Theta_0&=\{\mu:\mu\leq 2000\}\\
+\Theta_1&=\{\mu:\mu>2000\}
+\end{aligned}
+$$
+In general if $\Theta$ is a parameter space then many hypothesis correspond to
+$$
+\begin{aligned}
+H_0&:\theta\in \Theta_0 \\
+H_1&:\theta\in\Theta_1\\
+\Theta_1, \Theta_0&\subset\Theta\\
+\Theta_0\cap\Theta_1&=\emptyset
+\end{aligned}
+$$
+\end{exmp}
+
+\begin{defn}\label{defn:53}
+\begin{enumerate}
+\item A hypothesis is called simple if the model is completely parameterized with parameter space $\Theta$ and $H_0:\theta=\theta_0$ (specified $\Theta_0\in\Theta$). (i.e. $\Theta_0=\{\theta_0\}$ is a singleton set)
+\item otherwise the hypothesis is called composite.
+\end{enumerate}
+\end{defn}
+
+\begin{exmp}[Ex. \ref{exmp:52} cont.]
+If we assume $Y\sim\text{N}(\mu, \sigma^2)$, $\sigma^2$ known, hypothesis
+$$
+\begin{aligned}
+H_0&:\mu=2000 \text{ is a simple hypothesis};\\
+H_1&:\mu>2000 \text{ is composite}
+\end{aligned}
+$$
+suppose $\sigma^2$ is not known then $\Theta=\R\times(0, \infty)$ and $H_0:\mu=2000=(\mu, \sigma^2)\in\underbrace{\{(2000, c):c>0\}}_{\text{not a singleton set}}$. This is composite (because there are many possible values of $\sigma^2$). However 
+$$
+\begin{aligned}
+H_0&:\mu=2000, \sigma^2=10
+\end{aligned}
+$$
+This is simple.
+
+If we don't even know the distribution of $y$, wen can still test $H_0:\mu=2000$(or $H_0:\leqslant2000$).
+\end{exmp}
+
+\textbf{Null Hypothesis $H_0$}\\
+Research (alternative) hypothesis $H_1$.\\
+Treat these asymetrically -- $H_0$ is presumed to hold until we have sufficient (strong) evidence  that $H_1$ is correct. \underline{i.e.}, to "believe" $H_1$, we must rule out $H_0$. The asymetry reflects the difference in actions taken (and their consequences) depending on which hypothesis we choose.
+
+\begin{exmp}[Ex. \ref{exmp:52} cont.]
+In order to justify production/sales of a raw light bulb design, we \underline{must be convinced} that its average lifetime exceeds 2000 hours.
+We have $\mu>2000\rightarrow H_1(\text{claim to be demonstrated)}$, $\mu\leqslant2000\rightarrow H_0(\text{presumed until $H_1$ is demonstrated)}$. \\
+The asymetry the effects how we make the decision and is reflected in the statistical analysis.
+\end{exmp}
+
+\underline{Recall Simple Hypothesis} iff. exactly one value of $\Theta$, \underline{composite hypothesis} -- any other (not simple).
+
+\begin{defn}
+A \underline{hypothesis test} is a rule that translates the data in to a decision between $H_0$ and $H_1$. 
+\end{defn}
+If specifies whether: a) to reject $H_0$ in favor of $H_1$, or b) to not reject $H_0$. Such a rule is ofter of the form,
+$$
+\begin{aligned}
+T(\bm{X})\in A&\Rightarrow H_0 \text{ is \underline{Not} rejected}\\
+T(\bm{X})\not\in A&\Rightarrow H_0 \text{ is rejected (and $H_1$ is accepted)}
+\end{aligned}
+$$
+The set $A\subset \R^n$ is called the \underline{acceptance region}, $A^\complement$ is called the \underline{rejection region} for a \underline{test statsistic} $T(X)$.
+
+\begin{exmp}[Ex. \ref{exmp:52} cont.]
+$H_0:\mu\leq 2000 \text{ v.s. } H_1:\mu>2000, \ \ X_i\sim \text{i.i.d. some dist.}$. It seems appropriate to reject $H_0$ if $\bar{X}$ is "large". \underline{i.e.}, let $A^\complement=[c, \infty)$ so $\bar{X}\geqslant c\Rightarrow$ reject $H_0$. This defines a test for any any real $c$. Choice of $c$? $c=2000$(naive choice), $\bar{X}>2000$ is evidence $\underbrace{\text{\underline{that $\mu>2000$}}}_{H_1}$, but it does not \underline{rule out} $H_0$. So $c$ will need to be some what bigger that 2000. Two questions we will need to answer.
+\begin{enumerate}
+\item What is a "good" test statistic?
+\item How to define acceptance the indicator variable?
+\end{enumerate}
+It is useful to consider the indicator variable $Q(\bm{x})=I_{A^\complement}T(\bm{X})$ -- called the decision rule: $Q(\bm{X})=1\Rightarrow \text{acceptance $H_1$(reject $H_0$)}$; $Q(\bm{X})=0\Rightarrow \text{do not reject $H_0$}$.
+\end{exmp}
+\begin{defn}
+\begin{enumerate}
+\item \underline{Type I error} -- reject $H_0$ when $H_0$ is true;
+\item \underline{Type II error} -- fail to reject $H_0$ when $H_1$ is true.
+\end{enumerate}
+Both of these are generally possible.(both impossible iff we know whether $H_1$ is true or not)
+\end{defn}
+
+The \underline{power} of a test is the chance that $H_0$ is reject=$P(T(\bm{X})\not\in A)=P(Q(\bm{X})=1)=E(Q(\bm{X}))$,
+$$
+\begin{aligned}
+H_0 \text{ true}&\Rightarrow \text{ Power=chance of Type I error}\\
+H_1 \text{ true}&\Rightarrow \text{ Power=1-chance of Type I error}\\
+\end{aligned}
+$$
+\begin{defn}
+In a parametric setting with 
+$$
+\begin{aligned}
+H_0&:\theta=\Theta_0\\
+H_1&:\theta=\Theta_1
+\end{aligned}
+$$
+where $\Theta_0$ and $\Theta_1$ are disjoint subsets of $\Theta$.
+\begin{enumerate}
+\item The \underline{power function} is
+$$
+\beta(\theta)=\text{power where $\theta$ is the true value}=E_{\theta}(Q(\bm{X}))=P_\theta(T(\bm{X}\not\in A))
+$$
+\item The \underline{size} of the test is 
+$$
+\text{sup}_{\theta\in\Theta_0}\beta(\theta)=\text{max chance of Type I error}
+$$
+The test is said to have \underline{level} $\alpha$ if its size is no more than $\alpha$ ($0\leqslant\alpha\leqslant 1$).
+\end{enumerate}
+(The distinction between level and size is that in practice we may not know or be able to choose the size.)
+\end{defn}
+
+\begin{exmp}[Ex \ref{exmp:52}]
+Assume $X_i\sim\text{N}(\mu, 10000)$, parameter space $\Theta=\R$, Test statistic is $T=\bar{X}$ and $A=(-\infty, c)$ for some fixed $c$.
+Decision Rule is $Q(\bm{X})=I_{[c, \infty)}(\bar{X})$. The power function is $\beta(\mu)=E_Q(I_{[c, \infty)}(\bar{x}))=P_\mu(\bar{x}\geqslant c)=1-\phi\left(\frac{c-\mu}{100/\sqrt{n}}\right)$. $\beta(\mu)$ is monotone in $\mu$ (this is not always true), as $\mu$ increases, $\beta(\mu)$ increases. So, larger $\mu$ means it is more likely that $H_0$ will be rejected. The size of test is 
+$$
+\text{sup}_{\mu\in\Theta_0}\beta(\mu)=\text{sup}_{\mu\leqslant2000}(1-\phi(0.01\sqrt{n}(c-\mu))=1-\phi(0.01\sqrt{n}(c-2000))
+$$
+To have a test with size (level) $\alpha$ we need
+$$
+\alpha=1-\phi(0.01\sqrt{n}(c-2000))
+$$
+or
+$$
+c=2000+z_\alpha\frac{100}{\sqrt{n}}\quad(\text{where $z_\alpha$ satisfies $1-\phi(z_\alpha)=\alpha$})
+$$
+Having chosen $c$, the power function is
+$$
+\beta(\mu)=1-\phi\left(0.01\sqrt{n}\left(2000+z_\alpha\frac{100}{\sqrt{n}}-\mu\right)\right)=1-\phi\left(z_\alpha-0.01\sqrt{n}(\mu-2000)\right)
+$$
+The max chance of a Type II error is
+$$
+\text{sup}_{\mu\in\Theta_1}(1-\beta(\mu))=\text{sup}_{\mu>2000}\left(\phi(z_\alpha-0.01\sqrt{n}(\mu-2000))\right)=\phi(z_\alpha)=1-\alpha
+$$
+The point is that we cannot minimize the max chance of a Type II error independently of the size of the test.
+\end{exmp}
+
+
+\begin{exmp}[Ex \ref{exmp:52} cont.]
+$X_i\sim \text{i.i.d. N}(\mu, 10000)$, 
+$$
+\begin{aligned}
+\text{Test }& H_0:\mu\leqslant 2000\\
+&H_1:\mu>2000
+\end{aligned}
+$$
+reject $H_0$ if $\bar{x}\geqslant c$. Power fn: $\beta(\mu)=1-\phi(0.01\sqrt{n}(c-\mu))$.\\
+If size [max $P(Type I error)]=\alpha$, then
+$$
+\beta(\mu)=1-\phi(z_\alpha-0.01\sqrt{n}(\mu-2000))
+$$
+But
+$$
+\underbrace{\max P(\text{Type I error}) + \max P(\text{Type II error})}_{\text{cannot make those both small}}=1
+$$
+However, for a \underline{fixed alternative value} $\mu_1\in\Theta_1=(2000, \infty)$
+$$
+P_{\mu_1}(\text{Typer II error})=1-\beta(\mu_1)=\phi(z_\alpha-0.01\sqrt{n}(\mu_1-2000))\rightarrow0\quad\text{as}\quad n\rightarrow\infty
+$$
+so we can pick a sample size $n$ so that we have $\gamma=P_{\mu_1}(\text{Type II error})$ where $\gamma$ and $\mu_1$ are fixed. That is, solve (for $n$)
+$$
+\phi(z_\alpha-0.01\sqrt{n}(\mu_1-2000))=\gamma\Rightarrow z_\alpha-0.01\sqrt{n}(\mu_1-2000)=-z_\alpha
+$$
+or $n\geqslant \left(\frac{z_\alpha+z_\gamma}{\mu_1-2000}\cdot 100\right)^2$
+\end{exmp}
+
+\underline{Summarizing}\\
+\underline{Procedure} (sample size determination for a hypothesis test)\\
+\begin{enumerate}
+\item Determine the test that will have size $\alpha$ for any $n$;
+\item For a "meaningful" alternative $\theta_1\in\Theta_1$, solve $1-\beta(\theta_1)=\gamma=\text{desired chance of Type II error when $\theta=\theta_1$}$.
+\end{enumerate}
+A more mathematical use of $\beta(\theta)$ is to identify which tests have the greatest power (if any).
+\begin{defn}\label{defn:58}
+A hypothesis test (decision rule) with power function $\beta(\theta)$ is unbiased if 
+$$
+\beta(\theta_1)\geqslant \beta(\theta_0)\quad\text{for all $\theta_0\in\Theta_0, \theta_1\in\Theta_1$}
+$$
+(otherwise it may be more likely to reject in case where $H_0$ is the then in a case where it is not).
+\end{defn}
+\begin{exmp}[Ex. \ref{exmp:52} cont.]
+$X_i\sim\text{i.i.d N}(\mu, 10000)$ with the test reject $H_0:\mu\leqslant 2000$ if $\bar{x}>c$. We saw that the power function $\beta(\mu)$ is increasing is $\mu$. So
+$$
+\beta(\mu_1)>\beta(\mu_0)\quad\text{if $\mu_0\leqslant2000<\mu_1$}
+$$
+So, such a test is unbiased.
+\end{exmp}
+\begin{defn}\label{defn:59}
+A test $Q(\bm{x})$ is uniformly most powerful (UMP) \underline{in class $\mathscr{C}$} if
+$$
+\beta_u\xlongequal{def}E_\theta(Q(\bm{x}))\geqslant\beta_{u^*}\xlongequal{def}E_\theta(Q^*(\bm{x}))
+$$
+for all $u^*$ in the class of $\mathscr{C}$ and all $\theta\in\Theta$.
+\begin{enumerate}
+\item "UMP" iff $\mathscr{C}=$all level $\alpha$ tests;
+\item "UMPU" iff $\mathscr{C}=$all unbiased, level $\alpha$ tests.
+\end{enumerate}
+\end{defn}
+
+\begin{thrm}\label{thrm:510}[Neyman-Pearson Lemma]
+Consider testing simple hypotheses,
+$$
+H_0:\theta=\theta_0\quad\text{v.s.}\quad H_1:\theta=\theta_1\ (\theta_0 \text{ and }\theta_1\text{ are specified, fixed})
+$$
+Then the test given by
+$$
+\text{reject $H_0$ iff $\frac{L(\theta_1|\bm{x})}{L(\theta_0|\bm{x})}\geqslant k(k>0)$}
+$$
+is UMP among tests of its size or smaller. (i.e. $\mathscr{C}=$level $\alpha$ tests where $\propto P_{\theta_0}\left(\frac{L(\theta_1|\bm{x})}{L(\theta_0|\bm{x})}\geqslant k\right)$). Furthermore, this is essentially the unique such test.
+\end{thrm}
+
+\begin{exmp}\label{exmp:511}
+$X_i\sim\text{i.i.d. Geom}(p)$, 
+$$
+L(p|\bm{x})=p^n(1-p)^{n\bar{x}-n}
+$$
+The N-P test of $H_0:p=p_0\ \text{v.s.}\ H_1:p=p_1$ has for
+$$
+\text{reject $H_0$ iff $\frac{L(p_1|\bm{x})}{L(p_0|\bm{x})}=\left(\frac{1-p_1}{1-p_0}\right)^{n\bar{x}}$}
+$$
+This is equivalent to 
+$$
+\begin{aligned}
+n\bar{x}&\geqslant c\ \text{(some $c$) if } p_1<p_0;\\
+n\bar{x}&\leqslant c\ \text{(some $c$) if } p_1>p_0.
+\end{aligned}
+$$
+since $Y=n\bar{x}\sim\text{Negbin}(n, p))$, we can obtain (or fix) the size $\alpha$ by
+$$
+\alpha=\left\{\begin{aligned}
+&P_{p_0}(Y\geqslant c), \text{ if }p_1<p_0\\
+&P_{p_0}(Y\leqslant c), \text{ if }p_1>p_0\\
+\end{aligned}\right.
+$$
+(\underline{note}: not all values of $\alpha$ are possible since $Y$ has a discrete distribution).
+\end{exmp}
+
+\begin{proof}[\underline{Proof of Theorem \ref{thrm:510}}]
+Let $Q(\bm{x})$ be the decision rule $Q(\bm{x})=1$ iff $\frac{L(\theta_1|\bm{x})}{L(\theta_0|\bm{x})}\geqslant k$ iff $f(\bm{x}|\theta_1)-kf(\bm{x}|\theta_0)\geqslant0$.
+Let $Q^*(\bm{x})$ be any other decision rule with level $\alpha=E_{\theta_0}\{Q^*(\bm{x})\}\leqslant\alpha$ (=size of $u$). That is $E_{\theta_0}\{Q^*(\bm{x})\}\leqslant\alpha$. We need to show $\beta_Q(\theta_1)=E_{\theta_1}\{Q(\bm{x})\}\geqslant \beta_{u^*}(\theta_1)=E_{\theta_1}\{Q^*(\bm{x})\}$. 
+$$
+\begin{aligned}
+E_{\theta_1}\{Q^*(\bm{x})\}-E_{\theta_1}\{Q(\bm{x}\}&\geqslant E_{\theta_1}\{Q^*(\bm{x})-Q(\bm{x})\}-k\left[E_{\theta_1}Q^*(\bm{x})-Q(\bm{x})\}\right]\\
+&=\int\underbrace{\{Q^*(\bm{x})-Q(\bm{x})\}}_{\begin{aligned}
+\geqslant0\text{ if }Q(\bm{x})=0\text{ iff }\theta_1\leqslant0\\
+\leqslant0\text{ if }Q(\bm{x})=1\text{ iff }\theta_1\geqslant0
+\end{aligned}}\{f(\bm{x}|\theta_1)-kf(\bm{x}|\theta_0)\}\mathrm{d}\bm{x}<0\quad(*)
+\end{aligned}
+$$
+Since $\Theta_1=\{\theta_1\}$ then $u$ is UMP and equality occurs in $(*)$ only if $\{Q^*(\bm{x})-Q(\bm{x})\}\{f(\bm{x}|\theta_1)-kf(\bm{x}|\theta_0)\}=0$,
+$$
+\begin{aligned}
+\frac{L(\bm{x}|\theta_1)}{L(\bm{x}|\theta_0)}\not=k&\Rightarrow Q^*(\bm{x})-Q(\bm{x})=0\\
+\frac{L(\bm{x}|\theta_1)}{L(\bm{x}|\theta_0)}=k&\Rightarrow Q^*(\bm{x})=Q(\bm{x})\text{ whenever }P\left(\frac{L(\theta_1|\bm{x})}{L(\theta_0|\bm{x})}=k\right)>0
+\end{aligned}
+$$
+\end{proof}
+
+\begin{cor}\label{cor:512}
+The UMP test in Theorem \ref{thrm:510} (the N-P test) is a function of the minimal sufficient statistic. If $T=t(\bm{x})$ is sufficient, the test is the some as reject $H_0$ if $\frac{f_T(t(\bm{x}|\theta_1))}{f_T(t(\bm{x}|\theta_0))}>k$.
+\end{cor}
+\begin{proof}
+By Theorem 2.25, $\frac{L(\theta_1|\bm{x})}{L(\theta_0|\bm{x})}$ is a function of a minimal sufficient statistic. By Neman Factorization Theorem,
+$$
+\frac{L(\theta_1|\bm{x})}{L(\theta_0|\bm{x})}=\frac{f_T(t(\bm{x}|\theta_1))}{f_T(t(\bm{x}|\theta_0))}\qquad\text{for some function $h(\bm{x})$}
+$$
+\end{proof}
+
+
+\begin{exmp}[Ex. \ref{exmp:511} cont.]
+$X_i\sim\text{i.i.d~Geom}(p)$, we saw that N-P test is a function of $Y=\sum_{i=1}^nX_i=n\bar{X}$ which is minimal sufficient. So to identify the test (i.e. choose $k$) we need only know the distribution of $Y$(Neg-bin).
+\end{exmp}
+
+\begin{cor}\label{cor:513}
+Suppose $Q(\bm{X})$ is the test function (decision rule) for $H_0:\theta\in\Theta_0\text{ v.s. }H_1:\theta\in\Theta_1$ and for some (fixed) $\theta_0\in\Theta_0$, $Q(\bm{x})$ is a size $\alpha$ N-P $\left[\frac{L(\theta_1|\bm{x})}{L(\theta_0|\bm{x})}\right]$ test of $H_0:\theta=\theta_0\text{ v.s. }H_1:\theta=\theta_1$ for every $\theta_1\in\Theta_1$ Then $u$ is UMP level $\alpha$ test.
+\end{cor}
+
+\underline{Note}: The test cannot depend on $\Theta_1$ (otherwise its not a statistic) but it can depend on chosen value of $\theta_0$.
+\begin{proof}
+Let $u^*$ be any level $\alpha$ test for 
+$$
+H_0:\theta\in\Theta_0, \quad H_1:\theta\in\Theta_1
+$$
+choose any $\theta_1\in\Theta_1$, since $\beta_{u^*}\leqslant \alpha\xlongequal{def}\beta_Q(\theta_0)$. Then N-P lemma says $\beta_{u^*}(\theta_1)\leqslant \beta_Q(\theta_1)$. So $u$ is more powerful than $u^*$ on $\Theta_1$.
+\end{proof}
+\begin{exmp}[Ex \ref{exmp:511} cont.]
+$X_i\sim\text{i.i.d. Geom})(p), Y=n\bar{X}$. Consider testing $H_0:p\leqslant p_0\text{ v.s. }H_1:p>p_0$, $p_0$ specified. An appropriate test is reject $H_0$ if $Y<C$, for some $c(P_{p_0}(Y<C)=\alpha)$.
+
+Test function is 
+$$
+Q(\bm{x})=I_{(0, c)}\left(\sum_{i=1}^nX_i\right)
+$$
+We have seen that this gives a N-P test of size $\alpha$ for $H_0:p=p_0\text{ v.s. }H_0:p=p_1$ for any $p_1>p_0$ so by Cor \ref{cor:513}, this give a UMP level $\alpha$ test for
+$$
+H_0:p\leqslant p_0\text{ v.s. }H_1:p>p_0
+$$
+(The is form specified by N-P lemma reject $H_0$ if $\left(\frac{1-p_1}{1-p_0}\right)^Y>k$ which appears to depend on $p_1$).
+\end{exmp}
+
+\begin{thrm}\label{thrm:514}
+Suppose $\Theta\subset\R$ and $T$ is a 1-dim sufficient statistic. If $f_T$ satisfies, for any $c$, $\theta_1>\theta_0$ there exists $K\geqslant0$ such that
+$$
+t>c\text{ iff }\frac{f_T(t|\theta_1)}{f_T(t|\theta_0)}>k\qquad(*)
+$$
+Then
+\begin{enumerate}
+\item $T>c$ is a UMP test for $H_0:\theta\leqslant\theta'\text{ v.s. }H_1:\theta>\theta'$ of size $\propto P_{\theta'}(T>c)$ and the power function is non-decreasing in $\theta$.
+\item $T<c$ is UMP level $\alpha=P_{\theta'}(T<c)$ for $H_0:\theta\geqslant \theta'\text{ v.s. }H_1:\theta<\theta'$, Power non-increasing
+\end{enumerate}
+\end{thrm}
+
+\begin{defn}[(*)]\label{defn:515}
+If the condition on $f_T$ in Theorem \ref{thrm:514} holds, $T$ is said to have \underline{monotone likelihood ratio}(because it is equivalent to saying $\frac{f_T(t|\theta_1)}{f_T(t|\theta_0)}$ is non-decreasing in $t$ if $\theta_1>\theta_0$)
+\end{defn}
+\begin{exmp}[Ex \ref{exmp:52} cont.]
+$X_i\sim\text{i.i.d~N}(\mu, \sigma^2)$, $\sigma^2$ know. $T=\bar{X}$ is minimal sufficient for $\mu$ with distribution N$(\mu, \frac{\sigma^2}{n})$. Suppose $\mu_1>\mu_0$
+$$
+\frac{f_{\bar{X}}(t|\mu_1)}{f_{\bar{X}}(t|\mu_0)}>k\text{ iff }\frac{-n}{2\sigma^2}\left\{(t-\mu_1)^2-(t-\mu_0)^2\right\}>\log k
+$$
+iff $t>\frac{\mu_1^2+\mu_0^2+\frac{2\sigma^2}{n} \log k}{2(\mu_1-\mu_0)}$.
+So the condition for theorem \ref{thrm:514} holds.\\
+So $\bar{X}>c$ gives the UMP test for $H_0:\mu\leqslant \mu_0\text{ v.s. }H_1:\mu>\mu_0$ and to have size $\alpha$, $c=\mu_0+z_\alpha\frac{\sigma}{\sqrt{n}}$. (Can also express the test as reject $H_0$ if $z_c=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}>z_\alpha$) and $\bar{x}<\mu-z_\alpha\frac{\sigma}{\sqrt{n}}$ is rejection criterion for a UMP level $\alpha$ test of $H_0:\mu\geqslant\mu_0\text{ v.s. }H_1:\mu<\mu_0$.
+\end{exmp}
+\begin{proof}[Proof of Theorem \ref{thrm:514}]
+\begin{enumerate}
+\item First, we have by MLR cond., that $T>C$ gives a N-P form of test for $H_0:\theta=\theta_0\text{ v.s. }H_1:\theta=\theta_1$. The power function satisfies (for $\theta_1>\theta_0$)
+$$
+\begin{aligned}
+\beta(\theta_1)-\beta(\theta_0)=(1-F_T(c|\theta_1))-(1-F_T(c|\theta_0))&=\int_{-\infty}^c(f_T(t|\theta_0)-f_T(t|\theta_1))\mathrm{d}t\\
+&=\int_{-\infty}^cf_T(t|\theta_0)\left(1-\frac{f_T(t|\theta_1)}{f_T(t|\theta_0)}\right)\mathrm{d}t\\
+&=0\text{ at }c=\infty\\
+&=0\text{ at }c=-\infty
+\end{aligned}
+$$
+with non increasing derivative. So, as a function of $c$, the integral is concave and must have min at $c=\pm\infty$; that is, $\beta(\theta_1)-\beta(\theta_0)\geqslant 0$. So $\beta(\theta)$ is nondecreasing and thus the size of the test $u$ for $H_0:\theta\leqslant\theta'\text{ v.s. }H_1:\theta>\theta'$ is 
+$$
+\max_{\theta<\theta'}\beta(\theta)=\beta(\theta')=\alpha\quad\text{(By assumption)}
+$$
+So $u$ is a level $\alpha$ N-P test for each $\theta_1>\theta'$ and $\theta_0=\theta'$. By Cor \ref{cor:513} it is UMP.
+\end{enumerate}
+\end{proof}
+
+\begin{exmp}\label{exmp:516}
+$X_i\sim\text{i.i.d~Unif}(0, \theta)$, $T=\max_{i\leqslant n}X_i$ is minimal sufficient for $\theta$ and $f_T(t|\theta)=\theta^{-n}t^nI_{(0, \theta)}(t)$. Check MLR: Let $\theta_1>\theta_0$, 
+$$
+\frac{f_T(t|\theta_1)}{f_T(t|\theta_0)}=\left\{\begin{aligned}&\left(\frac{\theta_0}{\theta_1}\right)^n&\quad&\text{if }t\leqslant\theta_0\\
+&\infty&\quad&\text{if }\theta_0<t\leqslant\theta_1\end{aligned}\right.
+$$
+This is non decreasing in $t$ hence $T$ has MLR so to test $H_0:\theta\geqslant\theta_0\text{ v.s. }H_1:\theta<\theta_0$, we use $T<C$ as our rejection region (Theorem \ref{thrm:514} (ii)) where $\alpha=P_{\theta_0}(T<C)=\left(\frac{c}{\theta_0}\right)^n$.
+\end{exmp}
+
+\begin{thrm}\label{thrm:517}
+Suppose $X_i\sim\text{i.i.d~f}(x|\theta)=h(x)c(\theta)e^{w(\theta)t(x)}$ where $w(\theta)$ is nondecreasing in $\theta(\theta\subset\R)$. Then $T=\sum_{i=1}^nt(x_i))$ has MLR and hence Theorem \ref{thrm:514} applies.
+\end{thrm}
+\begin{proof}Exercise.
+\end{proof}
+
+Theorem \ref{thrm:514} has several drawbacks, including:
+\begin{enumerate}
+\item There may not be a minimal sufficient statistic with MLR. \underline{ex}. $X_i\sim\text{logistic}(\mu, \beta)$, $\beta$ known (order statistics are minimal sufficient).
+\item The parameter space may be multidimensional. In particular, there may be a "nuisance" parameter which is not specified in the hypothesis. \underline{ex}. $X_i\sim\text{i.i.d N}(\mu, \sigma^2)$, $\sigma^2$ not known, for testing $H_0:\mu\leqslant\mu_0\text{ v.s. }H_1:\mu\geqslant\mu_0$, $\sigma^2$ is called a nuisance parameter here.
+\item The hypotheses may not be one sided, 
+$$
+\text{eg.   }H_0:\mu=\mu_0\text{ v.s. }H_1:\mu\not=\mu_0
+$$
+One option is to restrict alternative to unbiased tests. (i.e., $\beta_1(\theta_1)\geqslant\max_{\theta\in\Theta_0}\beta(\theta)\text{ for all }\theta\in\Theta_1$)
+\end{enumerate}
+
+
+\begin{thrm}\label{thrm:518}
+Suppose $X_i\sim\text{i.i.d N}(\mu,\sigma^2)$, $\sigma^2$ known,
+\begin{enumerate}
+\item There is no UMP level $\alpha$ test of $H_0:\mu=\mu_0\text{ v.s. }H_1:\mu\not=\mu_0$;
+\item The UMPU level $\alpha$ test exists and has the form reject $H_0$ if $\frac{|\bar{x}-\mu_0|}{\sigma/\sqrt{n}}>z_{\alpha/2}$.
+\end{enumerate}
+\end{thrm}
+
+\begin{proof}
+\begin{enumerate}
+\item Suppose $\mu_1>\mu_0$. By Theorem \ref{thrm:510} and Ex \ref{exmp:52}, the unique test of $H_0:\mu=\mu_0\text{ v.s. }H_1:\mu\not=\mu_0$ with size $\alpha=P_{\mu_0}$(reject $H_0$) and the most power is reject $H_0$ when $\bar{X}>\mu_0+z_\alpha\frac{\sigma}{\sqrt{n}}$. This test does not depend on $\mu_1$, so it is a level $\alpha$ test for $H_0:\mu=\mu\text{ v.s. }H_1:\mu\not=\mu_0$. No other test has more power at $\mu=\mu_1$. Similarly, if $\mu_1<\mu_0$, then the same can be said for the test that rejects $H_0$ if $\bar{X}<\mu_0-z_\alpha\frac{\sigma}{\sqrt{n}}$. Neither test (and no other) can be most powerful for every $\mu_1\not\mu_0$. Hence there is no UMP test.\\
+N-P lemma uses test statistic $\frac{L(\theta_1|\bm{x})}{L(\theta_0|\bm{x})}$ and illustrates the "optimality" of the likelihood principle. This is principle also $\Rightarrow$ ML estimation. One might consider $L(\hat{\theta}|\bm{x})$ as a measure of the "fitness" of the MLE $\hat{\theta}$. In particular, we could consider fitting the likelihood under the constraint $\theta\in\Theta_0$ to see how plausible $ H_0:\theta\in\Theta_0$ is (relative to MLE "fit"). Let $\theta_0$ maximize $L(\theta|\bm{x})$ restrict to $\theta\in\Theta_0$ 
+\end{enumerate}
+\end{proof}
+
+
+\begin{defn}\label{defn:519}
+The likelihood ratio (LR) statistic for testing $H_0:\theta\in\Theta_0\text{ v.s. }H_1:\theta\in\Theta_1$(=$\Theta_0^\complement$) is 
+$$
+\lambda(\bm{x})=\frac{\sup_{\theta\in\Theta_0}L(\theta|\bm{x})}{\sup_{\theta\in\Theta}L(\theta|\bm{x})}=\frac{L(\hat{\theta}_0|\bm{x})}{L(\hat{\theta}|\bm{x})}
+$$
+The level $\alpha$ test is to reject $H_0$ if $\underbrace{\lambda(\bm{x})\leqslant c_\alpha}_{\text{small $\lambda(\bm{x})$ corresponds to $\theta\in\Theta_0$ is not "likely"}}$ where $C_\alpha$ satisfies
+$$
+\sup_{\theta\in\Theta_0}P_{\theta}(\lambda(\bm{x})\leqslant C_\alpha)\leqslant\alpha.
+$$
+\end{defn}
+
+\underline{Remark} -- As  in the case of the N-P test $\lambda(\bm{x})$ is a function of a minimal sufficient statistic $T(\bm{X})$, and the test may be more usefully expressed in terms of $T(\bm{X})$.
+
+\begin{thrm}\label{thrm:520}
+In the case of simple hypotheses ($\theta=\{\theta_0, \theta_1\}$) the LR test is equivalent to the N-P test (if both have size $\alpha$)
+\end{thrm}
+
+\begin{proof}
+\end{proof}
+
+\begin{cor}\label{cor:521}
+The UMP of Theorem \ref{thrm:514} are equivalent to LR tests.
+\end{cor}
+\begin{proof}
+\end{proof}
+\begin{exmp}[Ex. \ref{exmp:52} cont.]
+$X_i\sim\text{i.i.d. N}(\mu, \sigma^2)$, $\sigma^2$ known. Consider
+$$
+H_0:\mu=\mu_0\text{ v.s. }H_1:\mu\not=\mu_0
+$$
+we know the MLE is $\hat{\mu}=\bar{X}$
+\end{exmp}
+
+
+Restricted (to $\theta_0$) MLE is clearly $\mu_0$. So the lR statistic is 
+$$
+\lambda(\bm{x})=\frac{L(\mu_0|\bm{x})}{L(\hat{\mu}|\bm{x})}=\text{exp}\left\{-\frac{1}{2\sigma^2}\left(\sum_{i=1}^n(x_i-\mu_0)^2-\sum_{i=1}^n(x_i-\bar{x})^2\right)\right\}=e^{-\frac{n}{2\sigma^2}(\bar{x}-\mu_0)^2}
+$$
+Since $\lambda(\bm{x})\leqslant c$ iff $|z_c|=\frac{|\bar{x}-\mu_0|}{\sigma/\sqrt{n}}\geqslant-2\log c$.
+
+We get out familiar test: reject $H_0$ if 
+$$
+|z_c|=\frac{|\bar{x}-\mu|}{\sigma/\sqrt{n}}>z_{\alpha/2}
+$$
+(which is the UMPU test of Theorem \ref{thrm:518})
+
+\underline{Problem}: UMPU test for $H_0:\theta=\theta_0$ v.s. $H_1:\theta\not=\theta_0$ in one parameter exponential family setting. Assume the sufficient statistic $T$ has density
+$$
+f_T(t|\xi)=h(t)c(\xi)e^{\xi t}\quad(\xi=w(\theta))\ \text{Here}\ H_0:\xi=\xi_0\text{ v.s. }H_1:\xi\not=\xi_0
+$$
+\underline{Recall}: $c$ is continuously diff. and $E_g(T)=\frac{-c'(\xi)}{c(\xi)}$ (Theorem 3.8). 
+
+Let $Q$ be UMPU size $\alpha$ test, if it exists.
+
+Let $Q^*$ be any other size $\alpha$, unbiased test
+$$
+\beta_{Q^*}(\xi)=\int Q^*(t)h(t)c(\xi)e^{\xi t}\mathrm{d}t
+$$
+is differentiable int and $\beta_{Q^*}(\xi)\geqslant\beta_{Q^*}(\xi_0)=\alpha\Rightarrow\frac{\partial}{\partial\xi}\beta_{Q^*}(\xi)\big|_{\xi=\xi_0}=0$. (min at $\xi=\xi_0$)
+want 
+$$
+\begin{aligned}
+0&\geqslant\beta_{Q^*}(\xi)-\beta_Q(\xi)\\
+&=\beta_{Q^*}(\xi)-\beta_Q(\xi)-k_0(\beta_{Q^*}(\xi_0)-\beta_Q(\xi_0))-k_1(\beta'_{Q^*}(\xi_0)-\beta'_{Q}(\xi_0)) (*)\\
+&=\int\{Q^*(t)-Q(t)\}\{f_T(t|\xi)-k_0f_T(t|\xi_0)-k_1\frac{\partial}{\partial\xi}f_T(t|\xi_0)\}\mathrm{d}t
+\end{aligned}
+$$
+where $k_0$ and $k_1$ can depend on $\xi$ and $\xi_0$. As in N-P lemma, this is possible if 
+$$
+Q(t)=\left\{\begin{aligned}&1 & & \text{if } f_T(t|\xi)-k_0f_T(t|\xi_0)-k_1\frac{\partial}{\partial\xi}f(t|\xi_0)>0\\
+&0 & &\text{otherwise}
+\end{aligned}\right.
+$$
+Consider the acceptance region
+$$
+t:f_T(t|\xi)\leqslant k_0f_T(t|\xi_0)+k_1\frac{\partial}{\partial \xi}f_T(t|\xi_0)
+$$
+iff $\underbrace{c(\xi)e^{(\xi-\xi_0)t}}_{\text{exponential in }t}\leqslant \underbrace{k_0c(\xi_0)+k_1c'(\xi_0)+k_1c(\xi_0)t}_{\text{linear in }t}$
+
+In case $\theta<\theta_0$, $\xi\not=\xi_0$, given $t_1<t_1$ (where $t_1$ and $t_2$ do not depend on $\xi$), we can find $k_0$ and $k_1$ (can depend on $\xi$) so that the acceptance region is $t_1\leqslant T \leqslant t_2$. Similarly in case $\theta>\theta_0$. So if $Q$ exists, it must be equivalent to reject $H_0$ if $T>t_2$ or $T<t_1$, size $\alpha\Rightarrow P_{\xi_0}(t_1\leqslant T\leqslant t_2)=1-\alpha$.
+
+Also, if we can ensure $\beta_Q'(\xi_0)=0$, then (*) will hold in case $Q^*(\xi)=\alpha$. So we must have $\alpha=\beta_{Q^*}(\xi)\leqslant\beta(\xi)$. $\forall \xi$ that is $Q$ will be unbiased. So we need
+$$
+\begin{aligned}
+0&=\beta_{Q^*}(\xi_0)=\frac{\partial}{\partial\xi}\int Q(t)h(t)c(\xi)e^{\xi t}\mathrm{d}t\big|_{\xi=\xi_0}\\
+&=\int Q(t)h(t)c(\xi)\left(t+\frac{c'(\xi)}{c(\xi)}\right)e^{\xi t}\mathrm{d}\big|_{\xi=\xi_0}\\
+&=\int Q(t)\left(t-E_{\xi_0}(T)\right)f_T(t|\xi_0)\mathrm{d}t\\
+&=Cov_{\xi_0}(Q(T),T)=-Cov_{\xi_0}(1-Q(T), T)
+\end{aligned}
+$$
+
+\begin{thrm}\label{thrm:522} Assume $X_i\sim \text{i.i.d. }f(x|\theta)=h(x)c(\theta)e^{w(\theta)t(x)}$, $w(\theta)$ strictly increasing. Let $T=T(\bm{x})=\sum_{i=1}^nt(x_i)$ and define
+$$
+Q(\bm{x})=I_{T(\bm{x})<t_1}+I_{T(\bm{x})>t_2}\quad (t_1<t_2)
+$$
+If $P_\theta(T(\bm{x})<t_1\text{ or }T(\bm{x})>t_2)=\alpha$ and $Q(\bm{x})$ is uncorrelated with $T(\bm{x})$ then $Q$ is a UMPU size $\alpha$ test of 
+$$
+H_0:\theta=\theta_0\text{ v.s. }H_1:\theta\not=\theta_0
+$$
+\end{thrm}
+\begin{proof}With reparameterization $\xi=w(\theta)$ and $\xi_0=w(\theta_0)$, $T$ satisfies the conditions for the derivation above and $\theta=\theta_0$ iff $\xi=\xi_0$.
+\end{proof}
+
+\begin{thrm}\label{thrm:518ii}
+UMPU test of $H_0:\mu=\mu_0\text{ v.s. }H_1:\mu\not=\mu_0$ is given by reject $H_0$ if $|z_c|=\frac{|\bar{x}-\mu_0|}{\sigma/\sqrt{n}}>z_{\alpha/2}$
+\end{thrm}
+\begin{proof}With $\sigma^2$ known, we can express the density as $f(x|\mu)=c(\mu)h(x)e^{\mu_x/\sigma^2}$. Also, $1-\alpha=P_{\mu_0}\left(-z_{\alpha/2}\leqslant\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}\leqslant z_{\alpha/2}\right)$. So the test has size $\alpha$. By symmetry $I_{\left(-z_{\alpha/2}\leqslant\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}\leqslant z_{\alpha/2}\right)}=1-Q(\bm{x})$ is uncorrelated with $T=\sum_{i=1}^nX_i$, so the test is unbiased.
+\end{proof}
+
+\begin{exmp}\label{exmp:523}
+$X_i\sim\text{i.i.d. exp}(\beta), ~T=\sum_{i=1}^nX_i\sim\text{gamma}(n, \beta)$, so we need to choose $t_1=c_1\beta_0, t_2=c_2beta_0$ such that 
+$$\begin{aligned}
+1-\alpha&=P_{\beta_0}(t_1\leq T\leq t_2)\\
+&=\int_{c_1}^{c_2}y^{n-1}\frac{e^{-y}}{\Gamma(n)}\mathrm{d}y\qquad(i)
+\end{aligned}$$
+and
+$$\begin{aligned}
+0&=E_{\beta_0}(I_{t_1\leq T\leq t_2}(T-n\beta)\qquad(ii)
+\end{aligned}$$
+given $(i), (ii)$ can be expressed as
+$$
+1-\alpha=\int_{c_1}^{c_2}\frac{y^ne^{-y}}{\Gamma(n+1)}\mathrm{d}y
+$$
+$c_1$ and $c_2$ would have to be solved for numerically.
+\end{exmp}
+
+
+We have considered 
+$$\begin{aligned}
+H_1&:\theta>\theta_0\\
+H_1&:\theta<\theta_0\\
+H_1&:\theta\not=\theta_0
+\end{aligned}$$
+Another option is $H_1:\theta_1<\theta<\theta_2$ ($\theta$ "close" to value.
+
+\begin{thrm}\label{thrm:524}[Assume as in Theorem \ref{thrm:518}]
+The UMP size $\alpha$ test for $H_0:\theta\leq\theta_1$ or $\theta\geq\theta_2$ vs. $H_1:\theta_1<\theta<\theta_2$ is given by
+$$
+Q(\underline{x})=I_{t_1\leq T(\underline{x})\leq t_2}
+$$
+where $t_1$ and $t_2$ satify
+$$
+P_{\theta_1}(t_1<T<t_2)=P_{\theta_2}(t_1<T<t_2)=\alpha
+$$
+\end{thrm}
+
+
+
+\begin{proof}
+Exercise.
+\end{proof}
+
+
+Similar to that of Theorem \ref{thrm:522}  this involves showing the test can be equivalently be described by rejection $H_0$ if $f_T(t|\xi)>k_1f(t|\xi_1)+k_2f(t|\xi_2)$ where $k_1$ and $k_2$ may depend on $\xi, ~\xi_1\text{ and }\xi_2$.
+
+
+\begin{exmp}[Ex. \ref{exmp:52} cont.]
+$X_i\sim\text{i.i.d. N}(\mu, \sigma^2), ~\sigma^2$ known. (This is a one parameter exp. family, $w(\mu)=\frac{\mu}{2\sigma^2}$ is monotone.)
+
+Test $H_0:|\mu-\mu_0|\geq\delta\text{ vs. }H_1:|\mu-\mu_0|<\delta$, let $\mu_1=\mu_0-\delta, ~\mu_2=\mu_0+\delta$. It suffices to use $z_c=\frac{\bar{x}-\mu_0}{\delta/\sqrt{n}}$ at the test statistic. (1-1 function of $T=\sum_{i=1}^nX_i$).
+
+We need o solve
+$$
+\begin{aligned}
+\alpha&=P_{\mu_1}(z_1<z_c<z_2)=P_{\mu_2}(z_1<z_c<z_2)\leftrightarrow z_1=-z_2\text{ by symmetry}\\
+&=-P\left(-z_2<z_0-\frac{\delta}{\sigma}\big/\sqrt{n}<z_2\right)\text{ (where $z_0\sim$ std Normal)}\\
+&=\Phi\left(\frac{\delta/\sigma}{\sqrt{n}}+z_2\right)-\Phi\left(\frac{\delta/\sigma}{\sqrt{n}}-z_2\right)\text{ to be numerically}
+\end{aligned}
+$$
+\underline{ex.} if $\delta=\frac{1}{5}\sigma,~n=50, \alpha=0.05$ Then $z_2=0.16954$ so we would reject $H_0$ if $\frac{|\bar{x}-\mu_0}{\sigma/\sqrt{n}}<0.16954$.
+\end{exmp}
+
+
+\begin{exmp}[Ex. \ref{exmp:523} cont.]
+$X_i\sim \text{ i.i.d. exp}(\beta)$, $T=\sum_{i=1}^nx_i\sim\text{gamma}(n, \beta)$. Test $H_0:\beta\leqslant\beta_1$ or $\beta\geqslant\beta_2$ vs $H_1: \beta_1<\beta<\beta_2$. 
+$$
+\begin{aligned}
+\alpha&=P_{\beta_1}(t_1<T<t_2)=P_{\beta_2}(t_1<T<t_2)\quad Y=\frac{T}{\beta}\sim\text{gamma}(n, 1)\\
+&=P\lp\frac{t_1}{\beta_1}<Y<\frac{t_2}{\beta_1}\rp=P\lp\frac{t_1}{\beta_2}<Y<\frac{t_2}{\beta_2}\rp\\
+&\approx \frac{t_2-t_1}{\beta_1}f_Y\lp\frac{t_1+t_2}{2\beta_2}\rp
+\end{aligned}
+$$
+
+{\Huge \underline{INSERT GRAPH}}
+
+Let $t'=\frac{t_1+t_2}{2}$, solve (approx.)
+$$
+1=\frac{f_Y\lp\frac{t'}{\beta_1}\rp\big/\beta_1}{f_Y\lp\frac{t'}{\beta_2}\rp\big/\beta_2}
+$$
+\end{exmp}
+
+
+\begin{exmp}[Ex. \ref{exmp:52} cont.]
+$X_i\sim \text{ i.i.d. N}(\mu, \sigma^2)$. The LR test of $H_1:\mu\not= \mu_0$ is the same as the UMPU test.
+\end{exmp}
+
+\begin{exmp}[Ex. \ref{exmp:523} cont.]
+$X_i\sim\text{ i.i.d. exp}(\beta)$, 
+$$
+H_0:\beta=\beta_0\text{ vs }H_1\not= \beta_0\qquad (\Phi_0=\{\beta_0\})
+$$
+MLE is $\hat{\beta}=\bar{x}$, restricted MLE is $\bar{\beta}_0=\beta_0$. So 
+$$
+\lambda(\underline{x})=\frac{\beta_0^-ne^{-n\bar{x}/\beta_0}}{\bar{x}^{-n}e^{-n\bar{x}/\bar{x}}}=\left[\lp \frac{\bar{x}}{\beta_0}\rp e^{1-\bar{x}/\beta_0}\right]^n
+$$
+$$
+\begin{aligned}
+\lambda{\underline{x}}\leqslant C_\alpha\\
+\lambda{\underline{x}}\leqslant C_\alpha\Rightarrow\frac{\bar{x}}{\beta_0}<y_1\text{ or }\frac{\bar{X}}{\beta_0}>y_2
+\end{aligned}
+$$
+where
+$$
+y_1e^{y_1}=y_2e^{y_2}\text{  and  }P\lp y_1<Y<y_2\rp=1-\alpha\qquad Y\sim \text{gamma}\lp n, \frac{1}{n}\rp
+$$
+Compare to UMPU obtain earlier (not the same).
+
+{\Huge \underline{INSERT GRAPH}}
+\end{exmp}
+
+\vspace{5 mm}
+
+\underline{Nuisance parameter} -- Parameter not expressly indicated in the hypothesis.
+
+\begin{exmp}\label{exmp:525}
+$X_i\sim \text{ i.i.d. N}\lp \mu, \sigma^2\rp$, $\sigma^2$ \underline{NOT} known. Test $H_0:\mu\leq \mu_0$ vs $H_1:\mu\geq\mu_0$. $\Theta=\R\times(0, \infty)$, and $\Theta_0=(-\infty, \mu_0]\times(0, \infty)$ unrestricted MLE is $(\hat{\mu}, \hat{\sigma}^2)=\lp \bar{x}, \frac{1}{n}\sum_{i=1}^n(x_i-\bar{x})^2\rp$, restricted MLE (requires $\hat{\mu}_n\leqslant \mu_0$)
+
+(details -- exercise)
+
+\underline{sketch}, $\hat{\mu}_0=\min(\bar{X}, \mu_0)\qquad (\min$ w.r.t. $\mu$ first then w.r.t $\sigma^2$)
+
+$\hat{\sigma}_0=\frac{1}{n}\sum_{i=1}^n(x_i-\hat{\mu}_0)^2$.
+
+So
+$$\begin{aligned}
+\lambda(\underline{x})&=\frac{L(\hat{\mu}_0, \hat{\sigma}_0^2|\underline{x})}{L(\hat{\mu}, \hat{\sigma}^2|\underline{x})}\\
+&=\frac{\hat{\sigma}}{\hat{\sigma}_0}\\
+&=\left\{\begin{array}{l l}
+1,  &\text{if }\bar{x}\leqslant\mu_0\\
+\lp\frac{\sum_{i=1}^n(x_i-\bar{x})^2}{\sum_{i=1}^n(x_i-\mu_0)^2}\rp^{\frac{1}{2}},   &\text{o.w.}
+\end{array}\right.
+\end{aligned}
+$$
+This is a monotone function of $T=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}$. So the LR test is equivalent to reject $H_0$ if $T>t_{\alpha, n-1}$. In fact, it is UMPU test size $\alpha$. It is not UMP because for each $\sigma^2$ there is a more powerful size $\alpha$ test.
+\end{exmp}
+
+
+\begin{exmp}\label{exmp:526}
+$X_i\sim \text{i.i.d }f(\bm{x}|\theta, \beta)=\frac{1}{\beta}e^{-\frac{x-\theta}{\beta}}I_{[0, \infty)(x)}$, $\beta$ unknown (nuisance). Test $H_0:\theta\leqslant \theta_0$ vs $H_1:\theta>\theta_0$ with size $\alpha$.
+$$
+L(\theta, \beta|\bm{x})=\beta^{-n}e^{-\frac{n(\bar{x}-\theta)}{\beta}}I_{(-\infty, \min X_i]}(\theta)
+$$
+This is increasing in $\theta$, as long as $\theta\leqslant\min X_i\Rightarrow$ unrestricted MLE is $\hat{\theta}=\min X_i$, maximizing over $\beta:\hat{\beta}=\bar{x}-\hat{\theta}=\hat{x}-\min X_i$. The restricted MLE requires $\hat{\theta}_0\leqslant\theta_0$. So $\hat{\theta}_0=\min(\min X_i, \theta_0)$ and $ \hat{\beta}_0=\bar{x}-\hat{\theta}_0$. Then
+$$\begin{aligned}
+\lambda(\underline{x})&=\frac{L(\hat{\theta}_0, \hat{\beta}_0|\underline{x})}{L(\hat{\theta}, \hat{\beta}|\underline{x})}=\frac{\hat{\beta}_0^{-n}e^{-\frac{n(\bar{x}-\hat{\theta}_0)^2}{\hat{\beta}_0}}}{\hat{\beta}^{-n}e^{-\frac{n(\bar{x}-\hat{\theta})^2}{\hat{\beta}}}}\\
+&=\left\lbrace\begin{array}{l l}
+1,  & \text{if min}X_i\leqslant \theta_0\\
+\lp\frac{\bar{x}-\min X_i}{\bar{X}-\theta_0}\rp^n, &\text{if }\min X_i>\theta_0
+\end{array}\right.
+\end{aligned}
+$$
+This is monotone in $T=\frac{\min X_i-\theta_0}{\bar{X}-\theta_0}$, so LRT is equivalent to $\lambda(\underline{x})$ "small"$\leftrightarrow$ $T$ "big".
+
+To get $t_\alpha$ we need $\alpha=\max_\beta P_{\theta_0, \beta}(T>t_\alpha)$. So we need the distribution of $T$. Let $Y_i=\frac{x_i-\theta_0}{\beta}$ (assuming, $\theta=\theta_0$) and $T=\frac{\min Y_i}{\bar{Y}}=\frac{n\min Y_i}{\sum_{i=1}^ny_i}$. 
+
+Let $V=n\bar{Y}=\sum_{i=1}^nY_i$, $U_i=\frac{Y_{(i)}}{V}$, $i=1, \dots, n$, $T=nU_1$,
+\begin{equation*}
+\begin{aligned}
+f(u_1, \dots, u_{n-1}, v)&=v^{n-1}e^{-v}I_{(0<u_1<\cdots<u_{n-1}<1)}I_{0<v}\\
+&=\underbrace{\lp\frac{v^{n-1}e^{-v}}{\Gamma(n)}I_{0<v} \rp}_{\text{gamma}(n, 1)} \underbrace{\lp(n-1)!I_{0<u_1<\cdots<u_{n-1}<1} \rp}_{\text{density of order statistics from sample of $n-1$ independent Unif(0, 1) r.v.'s}}
+\end{aligned}
+\end{equation*}
+In particular, $U_1$ has beta$(1, n-1)$ distribution, so need $t_{\alpha}$ to satisfy $\alpha=P_{\theta_0}(T>t_\alpha)=\lp 1-t_{\frac{\alpha}{n}}\rp^{n-1}$ or $t_{\alpha}=n(1-\alpha^{V_{n-1}}\approx-\log \alpha $ if $n$ is large.
+\end{exmp}
+
+\begin{defn}\label{defn:527}[Asymptotic tests]
+$T_n=$ test statistics for $H_0:\theta\in \Theta_0$ vs $H_1:\theta\in\Theta_1$. Sample of size $n$ rejection region is of the form
+$$
+h(T_n)<a_1\text{  or  }h(T_n)>a_2
+$$
+Suppose (i) $\Theta_0$ maximizes (among $\theta\in\Theta_0$)
+$$
+\lim_{n\to \infty}\underbrace{{\theta}\lp h(T_n)<a_1\text{ or }h(T_n)>a_2\rp}_{\text{Type I error}}
+$$
+and 
+$$
+\text{(ii)}\quad T_n\Rightarrow T\sim G(\cdot|\theta_0), \text{ as }n\to \infty, \theta=\theta_0
+$$
+Then an asymptotic size $\alpha$ test is given by the rejection region with $a_1$ and $a_2$ satisfying 
+$$
+P_{\theta_0}(h(T)<a_1\text{ or }h(T)>a_2)=\alpha
+$$
+\end{defn}
+
+
+\underline{Remark}: There need not be a parametric family (i.e., finite dimensional $\Theta$) for this method to be appropriate.
+
+\begin{exmp}[Ex. \ref{exmp:523}]
+$X_i\sim \text{i.i.d. exp}(\beta)$, Test $H_0:\beta=\beta_0$ vs $H_1:\beta\not=\beta_0$ both the UMPU test and the LRT (which are not the  same), reject $H_0$ if $\bar{X}<c_1\beta_0$ or $\bar{X}>c_2\beta_0$ for some $c_1$, $c_2$.
+
+\underline{Alternatively}, consider a test based on the asymptotic distribution of $\bar{X}$.
+$$
+T_n=\sqrt{n}\lp \frac{X}{\beta_0}-1\rp\Rightarrow T\sim \text{std normal}
+$$
+so an asymptotic rejection is of the form
+$$
+T_n<-z_{\frac{\alpha}{2}} \text{ or } T_n>z_{\frac{\alpha}{2}}
+$$
+Equivalently, $\bar{X}<\beta\lp 1-\frac{z_{\frac{\alpha}{2}}}{\sqrt{n}}\rp$ or $\bar{X}>\beta\lp 1+\frac{z_{\frac{\alpha}{2}}}{\sqrt{n}}\rp$.
+\end{exmp}
+
+\begin{exmp}\label{exmp:528}
+Suppose $X_i\sim \text{i.i.d }F$, $E(X^2)<\infty$, $H_0:\mu\geqslant \mu_0$ vs $ H_1:\mu<\mu_0$. We know $\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}\xrightarrow{D}\text{N}(0, 1)$ (CLT) and $s=\sqrt{\frac{1}{n-1}\sum_{i=1}^n(X_i-\bar{X})^2}$ is consistent for $\sigma$. So by Slutsky's Theorem
+$$
+\frac{\bar{X}-\mu}{s/\sqrt{n}}\xrightarrow{D}\text{N}(0, 1)
+$$
+Consider $T_n=\frac{\bar{X}-\mu_0}{s/\sqrt{n}}$, 
+$$
+T_n\Rightarrow\left\{
+\begin{array}{l l}
+-\infty, & \text{ if }\mu<\mu_0\\
+\text{N}(0, 1), &\text{ if }\mu=\mu_0\\
++\infty, &\text{ if }\mu>\mu_0
+\end{array}\right.
+$$
+
+Among $\mu\geqslant\mu_0$, $\lim_{n\to\infty}P(T_n<a_2)$ is maximized when $\mu=\mu_0$ (have $a_1=-\infty$),so we can take $a_2=-z_\alpha$ then the test is reject $H_0$ if $\frac{\bar{X}-\mu_0}{s/\sqrt{n}}\leqslant-z_\alpha$. 
+
+If $E(X^{2k})<\infty$, thus test expands immediately to test the value of $m_k=E(X^k)$ (use transformation $X_i\to Y_i=X_i^k$). More generally, it applies to tests based on moment estimators. Suppose $g:\mathbb{R}^k\to \mathbb{R}$ is cont. diff. and we want to test the value of $\xi=g(m_1, \dots, m_k)$. MOM estimator for $\xi$ is $\hat{\xi}=g(\hat{m}_1, \dots, \hat{m}_k)$ and by the delta method (Theorem \ref{thrm:436} \& \ref{thrm:437}), 
+$$
+\sqrt{n}(\hat{\xi}-\xi)\xrightarrow{D}\text{N}(0, V(m_1, \dots, m_{2k}))
+$$
+$V$ is cont., so a consistent estimator of $V(m_1, \dots, m_{2k})$ is $\hat{V}=V(\hat{m}_1, \dots, \hat{m}_{2k})$ by Slutsky's theorem.
+$$
+\frac{\sqrt{n}(\hat{\xi}-\xi)}{\sqrt{\hat{V}}}\xrightarrow{D}\text{N}(0, 1)
+$$
+so a test can be based on $T_n=\sqrt{\frac{n}{\hat{V}}}(\hat{\xi}-\xi_0)$.
+\end{exmp}
+
+\underline{ex}. Test $H_0:\xi\leq\xi_0$ vs $H_1:\xi>\xi_0$, reject $H_0$ if $T_n>z_\alpha$.
+
+\begin{exmp}\label{exmp:529}
+$X_i\sim \text{i.i.d. $F$ with }E(X^4)<\infty$. By Cor \ref{cor:438}, 
+$$
+\sqrt{n}(\hat{\sigma}^2-\sigma^2)\xrightarrow{D}\text{N}(0, E\{(x-\mu)^4\}-\sigma^4)
+$$
+Let $\hat{v}=\frac{1}{n}\sum_{i=1}^n(x_i-\bar{x})^4-\hat{\sigma}^4$. Then test of $H_0:\sigma^2\leqslant\sigma_0^2$ vs $H_1:\sigma^2>\sigma_0^2$ is given by, reject $H_0$ if $T_n=\sqrt{\frac{n}{\hat{V}}}\lp\hat{\sigma}^2-\sigma^2\rp>z_\alpha$
+\end{exmp}
+
+\vspace{10 mm}
+
+A general approach for large sample tests, based on moment estimators $g(\hat{m}_1, \hat{m}_2, \dots, \hat{m}_k)$ is asymptotic normal N$(g(m_1, \dots, m_k), \frac{V(m_1, \dots, m_{2k})}{N})$. Generalized $z$-statistic
+$$
+z=\frac{\sqrt{n}(g(\hat{m}_1, \dots, \hat{m}_k-g(m_1, \dots, m_k))}{\sqrt{V(\hat{m}_1, \dots, \hat{m}_{2k}}}
+$$
+
+\vspace{10 mm}
+
+\underline{IDEA}: get a moment estimate and approx. its variance and construct the $z$-stat test w/ std normal dist.
+
+\underline{Similarly}, under condition of theorem \ref{thrm:439} MLEs are also asymptotically normal and so $z$-statistics can be constructed for them as well.
+
+\begin{exmp}
+$X_i\sim \text{Pois}(\lambda)$, MLE is $\hat{\lambda}=\bar{X}$ and all the usual basic test depend on $\bar{X}$, consider
+$$
+H_0:\lambda=\lambda_0\text{ vs }H_1:\lambda\not=\lambda_0
+$$
+
+$\sqrt{n}(\bar{X}-\lambda)\xrightarrow{D}\text{N}(0, \lambda)$.
+
+To use this, we must estimate $\lambda$,
+\begin{enumerate}[1).]
+\item substitute $\bar{X}$ for $\lambda$: $z_c=\sqrt{n}\frac{\bar{x}-\lambda_0}{\sqrt{\bar{x}}}$;
+\item substitute $s^2$ for $\lambda$, $s^2$ is consist. for $\sigma^2=\lambda$, $z_c=\frac{\bar{X}-\lambda}{s/\sqrt{n}}$, \underline{robust} to model assumptions.
+\item make use of $H_0$ and substitute $\lambda_0$ for $\lambda$
+\end{enumerate}
+"Flexibility" includes
+\begin{enumerate}[a)]
+\item choosing any other consistent estimator for the variance $V$, of the estimate;
+\item using additional information from $H_0$ to estimate the variance;
+\item Transforming the data first;
+\item testing $\tau=h(\theta)$ instead of $\theta$
+\end{enumerate}
+or any combination of the above.
+\end{exmp}
+
+We could also consider testing 
+$$
+H_0:h(\lambda)=h(\lambda_0)\text{ where }h\text{ is a continuous 1-1 function.} 
+$$
+(If $h$ is cont. diff., we can use the delta method to get the asymptotic variance) Try $h(\lambda)=\lambda^{1/2}$. Test $H_0:\lambda^{1/2}=\lambda_0{1/2}$ vs $H_1:\lambda^{1/2}\not=\lambda_0^{1/2}$. MLE for $\lambda^{1/2}$ is $\bar{X}^{1/2}$ and by the delta method
+$$
+\sqrt{n}(\bar{X}^{1/2}-\lambda^{1/2})\xrightarrow{D}\text{D}\lp 0, \frac{1}{4}\rp
+$$
+so we can use
+$$
+z\not=2\sqrt{n}(\bar{X}^{1/2}-\lambda_0^{1/2})
+$$
+This has the advantage that the asymp. var. does not need to be estimated.
+
+
+\begin{exmp}\label{exmp:531}
+$$
+\left.\begin{aligned}
+&X_i\sim\text{ i.i.d. Pois}(\lambda), ~i=1, \dots, m\\
+&y_j\sim \text{ i.i.d. Poic}(\mu), ~j=1, \dots, n
+\end{aligned}\right\}
+x\text{'s and }y\text{'s indep.}
+$$
+Test $H_0:\lambda=\mu$ vs $H_1:\lambda\not=\mu$.
+
+MLE given by $\hat{\lambda}=\bar{x}, \hat{\mu}=\bar{y}$. Restricted MLE (under $H_0$): $\hat{\lambda}_0=\hat{\mu}_0=\frac{m\bar{X}+n\bar{Y}}{m+n}$, $var(\bar{X}-\bar{Y})=\frac{\lambda}{m}+\frac{\mu}{n}$.
+\begin{enumerate}
+\item substitute MLEs
+$$
+z=\frac{\bar{X}-\bar{T}}{\sqrt{\frac{\bar{X}}{m}+\frac{\bar{Y}}{n}}}
+$$
+\item substitute restricted MLE's
+$$
+z=\frac{\bar{X}-\bar{Y}}{\sqrt{\frac{\hat{\lambda}_0}{m}+\frac{\hat{\mu}_0}{n}}}
+$$
+\end{enumerate}
+Asymptotic distribution not always \underline{normal}
+\end{exmp}
+
+\begin{exmp}[Ex. \ref{exmp:526} cont.]
+$X_\sim \text{i.i.d }f(x|\theta, \beta)=\frac{1}{\beta}e^{-\frac{(x-\theta)}{\beta}}, ~x>\theta$. Location-scale exponential distribution \underline{assume} $\beta$ is known, MLE for $\theta$ is $\min X_i$ and 
+$$
+\frac{\min X_i-\theta}{\beta}\sim \text{exp}\lp\frac{1}{n}\rp
+$$
+so test statistic
+$$
+T=\frac{n\min X_i-\theta_0}{\beta} \text{ and compare to exp}(1)\text{ quantiles}
+$$
+\end{exmp}
+
+\vspace{10 mm}
+
+We can also base tests on the asymptotic behavior of the likelihood function.
+
+\vspace{10 mm}
+
+\begin{thrm}\label{thrm:532} 
+Suppose $\underline{X}\sim f_X(\underline{X}|\theta)$ where $f_{\bar{X}}$ satisfies some regularity conditions (such as these in Theorem \ref{thrm:439}. Let $\lambda(\underline{X})$ be the LRT statistic for 
+$$
+H_0:\theta\in\Theta_0\text{ vs }H_1:\theta\in\Theta_0^C
+$$
+Suppose $p=$"essential" number of parameters for model under $H_0$ (=dim $\Theta_0$)$<p=$"essential" number of parameters for the full model (= dim $\Theta$)
+
+(Note: $p-p_0=$essential number of equalities being tested in $H_0$ Then $-2\log\lambda(\underline{x})\Rightarrow\chi^2_{df={p-p_0}}\text{ as }n\rightarrow\infty$. We can use $\chi^2=-2\log\lambda(\underline{x})$ and compare to $\chi^2_{p-q}$ quantiles.
+\end{thrm}
+
+\begin{exmp}[Ex. \ref{exmp:530} cont.]
+$X_i\sim \text{ i.i.d Pois}(\lambda)$. Test
+$$
+H_0:\lambda=\lambda_0\text{  versus  }H_1:\lambda\not=\lambda_0
+$$
+$\theta_0;\{\lambda\}$ has $p_0=0$ dim. $\Theta=(0, \infty)$ has $p_1=1$ dim. \underline{LRT}
+$$
+\lambda(\underline{x}=\frac{\lambda_0^{n\bar{x}}-e^{n\lambda_0}}{\bar{x}^{n\bar{x}}e^{-n\bar{x}}}
+$$
+$$
+-2\log\lambda(\bar{x})=2n\bar{x}\left[\lp\log\lp\frac{\bar{x}}{\lambda_0}\rp+1-\frac{\bar{x}}{\lambda_0}\rp\right]
+$$
+Test using $\chi^2_1$ dist $(p-p_1=1)$. LRT for $H_0:\theta=\theta_0$ vs $H_1:\theta\not=\theta_0$,
+$$
+-2\log\lambda(\underline{x})=2\log\lp\frac{L(\hat{\theta}|\underline{x})}{L(\theta_0|\underline{x})}\rp\text{ is asymp. }\chi^2\text{ w/p d.f. where }p=\text{ dimensional of }\theta
+$$
+\end{exmp}
+
+\begin{exmp}[Ex \ref{exmp:531} cont.]
+$\left.\begin{aligned}
+&X_i\sim\text{ i.i.d. Pois}(\lambda), i=1, \dots, \infty\\
+&Y_i\sim\text{ i.i.d. Pois}(\mu), i=1, \dots, n
+\end{aligned}\right\rangle$ indep.\\
+Test $\begin{aligned}
+&H_0:\lambda=\mu, ~\Theta=\{(\lambda, \mu):\lambda=\mu>0\}\text{has dim. }p=1\\
+&H_1:\lambda\not=\mu, ~\Theta=\{(\lambda, \mu):\lambda>0, \mu>0\}\text{ has dim }p=2
+\end{aligned}$
+
+LRT statistic
+$$
+\lambda(\underline{x})=\frac{\lp\frac{m\bar{x}+n\bar{y}}{m+n}\rp^{m\bar{x}+n\bar{y}}}{\bar{x}^{m\bar{x}}\bar{y}^{n\bar{y}}}
+$$
+dist. of $\lambda(\bar{x})$ is complicated
+$$
+-2\log\lambda(\bar{x})=m\bar{x}\log\lp\frac{1+\frac{n\bar{y}}{m\bar{x}}}{1+\frac{n}{m}}\rp+n\bar{y}\lp\frac{1+\frac{m\bar{x}}{n\bar{y}}}{1+\frac{m}{n}}\rp
+$$
+has approx. $\chi^2_{df=p-p_0}$.
+
+* The LRT (especially this approx.) is useful when the number of parameter is more that 1 and there is not a sample stat. or $z$ stat to use.
+
+There are alternatives.
+\end{exmp}
+
+
+\begin{thrm}\label{thrm:533}
+Suppose $X_i\sim$ i.i.d. $f(\underline{x}|\theta)$ with regularity conditions $\Theta\subset\mathbb{R}^p$ and we consider testing
+$$
+H_0:\theta=\theta_0\text{  vs  }H_1:\theta\not=\theta_0
+$$
+If $H_0$ is true then
+\begin{enumerate}
+\item asymp. LRT: $-2\log\left\{\frac{L(\hat{\theta}_0|\underline{x})}{L(\hat{\theta}|\underline{x})}\right\}$ is approx. $\chi^2_p$.
+\item score test: $\frac{1}{n}S(\theta_0|\underline{x})'I_1(\theta_0)^{-1}S(\theta_0|\underline{x})$ is approx. $\chi^2_p$. $S(\theta|\underline{x})=$ vector of derivatives of $\log L(\theta|\underline{x})$ w.r.t each component in $\theta$.
+$$
+I_1(\theta)=-E\left\{\frac{\partial^2}{\partial\theta}\log f(\theta|\underline{x})\right\}_{p\times p\text{ matrix}}
+$$
+$$
+nI_1(\theta)=var(S(\theta|\underline{x}))
+$$
+\item Wald's test: $n(\hat{\theta}-\theta)')(\hat{\theta})(\hat{\theta}-\theta_0)$ is approx. $\chi_p^2$.
+\end{enumerate}
+\end{thrm}
+
+\begin{exmp}[Ex \ref{exmp:530} cont.]
+$X_i\sim\text{ Pois}(\lambda)$, Test $H_1:\lambda=\lambda_0$. LRT: $2n\bar{x}\left\{\log\lp\frac{\bar{x}}{\lambda_0}\rp+1-\bar{x}{\lambda_0}\right\}$ approx $\lambda_1^2$.
+
+Score test: $s(\lambda|\underline{x})=\frac{n\bar{x}}{\lambda}-n;~I(\lambda)=\frac{n}{\lambda}, ~n\lambda_0^{-1}(\bar{x}-\lambda_0)^2$ approx $\chi_1^2$.
+
+Wald's Test: $\hat{\lambda}=\bar{x}$ and $var(\bar{x})=\frac{\lambda}{n}$, $\frac{n(\bar{x}-\lambda_0)^2}{\lambda_0}$ approx $\chi_1^2$ which the same as the score test and is $z^2$ where $z$ is the $z$ stat. for asymp. normal test.
+\end{exmp}
+\begin{proof}[Proof of Theorem \ref{thrm:533}(sketch)]
+\begin{enumerate}[i)]
+\item By Taylor's expansion (about $\hat{\theta}$) and fact $s(\hat{\theta}|\underline{x})=0$, 
+$$
+2\log\left\{\frac{L(\hat{\theta}_0|\underline{x})}{L(\hat{\theta}|\underline{x})}\right\}\dot{=}s(\hat{\theta}|\underline{x})'(\hat{\theta}-\theta_0)-(\hat{\theta}-\theta)'\frac{\partial}{\partial\theta}s(\theta|\underline{x})\big|_[\theta=\hat{\theta}](\hat{\theta}-\theta_0)=n(\hat{\theta}-\theta)'\hat{I}_1(\hat{\theta}-\theta)
+$$
+where $\hat{I}_1=-\frac{1}{n}\underbrace{\frac{\partial}{\partial\theta}s(\theta|\underline{x})}_{\text{matrix of 2nd derivatives of log likelihood function}}\big|_{\theta=\hat{\theta}}$, 
+
+$\hat{I}_1$ is a consistent estimator for $I_1(\theta)$.
+\item In the same proof, $\frac{1}{\sqrt{n}}S(\theta_0|\underline{x})\Rightarrow \text{N}(0, I_1(\theta_0)$ by a similar argument
+$$
+\frac{1}{n}S(\theta_0|\underline{x})'I_1(\theta_0)^{-1}S)(\theta_0|\underline{x})\Rightarrow\chi^2_p
+$$
+\item By proof of Theorem \ref{thrm:439} (asymp. normality of MLEs)
+$$
+\sqrt{n}(\hat{\theta}-\theta)\Rightarrow\text{N}(0, I_1^{-1}(\theta))(p-\text{dim MV normal})
+$$
+Equivalently, 
+$$
+\sqrt{n}(\hat{\theta}-\theta)I_1(\theta)^{1/2}\Rightarrow\text{ vector of $p$ indep. std. normal rv's}
+$$
+so $n(\hat{\theta}-\theta)'I_1(\theta)(\hat{\theta}-\theta)\Rightarrow$ sum of squares of $p$ indep. std. normal rv's which has $\chi^2_p$ dist.
+\end{enumerate}
+\end{proof}
+
+
+\begin{exmp}\label{exmp:534}
+Multinomial goodness of fit
+$$
+N=(N_1, N_2, N_3)\sim\text{multinomial}(n, p_1, p_2, p_3), ~p_1+p_2+p_3=1
+$$
+$X_{ij}=1$ iff $i$th individual is in category $j$. Test $H_0:p_j=p_{0j}$ for $j=1, 2, 3$, where $p_{01}, p_{02}, p_{03}$ are specified.
+$$
+\begin{aligned}
+\Theta&=\{(p_1, p_2, p_3):p_j\leqslant0, ~p_1+p_2+p_3=1\}\text{ has 2 dim}\\
+\Theta_0=\{(p_{01}, p_{02}, p_{03}\}\text{ singleton set w/ dim 0}
+\end{aligned}
+$$
+$$
+L(p_1, p_2, p_3|N)=h(N)p_1^{N_1}p_2^{N_2}p_3^{N_3}=h(N)p_1^{N_1}p_2^{N_2}(1-p_1-p_2)^{N-N_1-N_2}
+$$
+MLE's $\hat{p}_j=\frac{N_j}{n}$
+so for LRT:
+$$
+-2\log\lambda(N)=2\log\left\{\frac{L(\hat{p}_1, \hat{p}_2, \hat{p}_3|N)}{L(p_{01}, p_{02}, p_{03})}\right\}=2\sum_{j=1}^3N_j\log\lp\frac{N_j}{np_{0j}}\rp
+$$
+This has approx. $\chi^2_2$ dist.
+
+Score function (as a function of $p_1, p_2$ only since $p_3=1-p_1-p_2$, $var(N_j)=n_j(1-p_j)$, $cov(N_j, N_k)=np_jp_k, \ j\not=k$
+$$
+\begin{aligned}
+S(\underline{p}|N)&=\begin{matrix}
+\frac{N_1}{p_1} & -\frac{N_3}{p_3}\\
+\frac{N_2}{p_2} & -\frac{N_3}{p_3}
+\end{matrix}\\
+I_1(p)&=\frac{1}{n}var\{S(p|N)\}=\begin{matrix}
+\frac{1}{p_1}+\frac{1}{p_3} &\frac{1}{p_3}\\
+\frac{1}{p_3} &\frac{1}{p_2}+\frac{1}{p_3}
+\end{matrix}
+\end{aligned}
+$$
+Then 
+$$
+\frac{1}{n}S(p|N)'I_1^{-1}(p)S(p|N)=\sum_{j=1}^3\frac{(N_j-np_{j0})^2}{np_{j0}}
+$$
+which is approx. $\chi^2_2$.
+\end{exmp}
+
+\begin{defn}\label{defn:535}
+Suppose $T$ is a test statistic for $H_0:\theta\in\Theta_0$ vs $H_1:\theta\in\Theta_1$ with rejection region of the form $T>c$ and cdf $F_T$. The \underline{significance level} (\underline{p-value}) of the test is $P=1-F_T(T)$
+\end{defn}
+
+\vspace{5 mm}
+
+\underline{Interpretation}
+\begin{enumerate}[a)]
+\item $p<\alpha$ iff $T>C_\alpha$, where $F_T(C_\alpha)=1-\alpha$ so $P$ is a test statistic with rejection region "($p<\alpha$)" equivalent to "$T>C_\alpha$" (This is easy to remember and use)
+\item $P$ is a \underline{random} variable with dist. -- uniform$(0, 1)$ if $F_T$ is cont., approx. unif(0, 1) otherwise (for large $n$).
+\item $P$ is the smallest size $\alpha$ s.t. \underline{this} data(T) is sufficient to reject $H_0$.
+\item $P$ is a sample "measure" of how much the evidence favors retaining $H_0$ (small $P$ iff little evidence for keeping $H_0$)
+\end{enumerate}
+
+However, $p$-value is \underline{NOT} a Type I error Prob. (because it is random).
+
+$P$-value is \underline{Not} a (Posterior) Prob. that $H_0$ is false. Furthermore, consistency of a test means that if $H_0$ is true than $p$-value$\rightarrow$0 as $n\rightarrow\infty$.
+
+\underline{Fallacy} -- small $p$-value are equated with meaningful results.
+
+"Statistical significance" is not the same as "Practical significance"
+
+
+\section{Chapter 9}
+\underline{Confidence Interval (and sets)}
+
+\subsection{Objective of Hypothesis Testing}
+
+Choose from specified statements about parameter(s).
+
+Confidence interval (set) estimation is about estimating the parameter value with "error bounds" to allow for randomness of the data (sampling error)
+
+\begin{defn}\label{defn:61}
+$\underline{X}=$ sample data, $\Theta\subset \mathbb{R}^p$. Let $\tau=\tau(\theta)$ be real valued.
+\begin{enumerate}[i)]
+\item An \underline{interval estimator} for $\tau$ is a (random) 2-dim statistic $[L(\underline{X}), U(\underline{X})]$ with $L(\underline{X})<U(\underline{X})$. The inference we make is "$\tau(\theta)$ is between (the calculated values of) $L(\underline{x}$ and $U(\underline{x})$". \underline{Note}, $L(\underline{X})$ and $U(\underline{X})$ are statistics that tell us how to construct the inference.
+\item A \underline{set estimator} for $\Theta$ is a random set $C(\underline{X})\subset\Theta$ (depending only on the data $\underline{X})$. The inference is "$\Theta$ is in $C$". The \underline{estimator} is really the \underline{random}  boundaries of the set. The parameter is assumed o be nonrandom. The interval estimator is a special case of a set estimator with 
+$$
+C(\underline{X})=\{\theta\in\Theta:L(\underline{X}\leqslant\theta\leq U(\underline{X})\}
+$$
+\end{enumerate}
+\end{defn}
+
+\begin{exmp}\label{exmp:62}
+$X\sim\text{ i.i.d. }F$, mean $\mu$. We can estimate $\mu$ with a "point" estimator $\bar{X}$ or we can estimate $\mu$ with an error bound $\Delta(\underline{X})$ by letting $L(\underline{X})=\bar{X}-\Delta(\underline{X}), ~U(\underline{X})=\bar{X}+\Delta(\underline{X})$.
+
+\underline{Method}: 
+
+(a) Compute $L(\underline{X})$ and $U(\underline{X})$;
+
+(b) Conclude $\mu$ is between the computed values
+\end{exmp}
+
+\begin{defn}\label{defn:63}
+Let $C=C(\underline{X})$ be a set estimator of $\theta$, 
+\begin{enumerate}[i)]
+\item the \underline{coverage probability} of $C$ is $P_{\theta}(C(\underline{X})\text{ contains }\theta)=$ chance that the inference "$\theta\in C$" will be correct.
+\item The \underline{confidence level} of $C$ is the minimum coverage prob
+$$
+\inf_{\theta\in\Theta}P_{\theta}(C(\underline{X})\text{ contains }\theta)
+$$
+\end{enumerate}
+\end{defn}
+
+A set estimator $C$ with confidence level $1-\alpha$ is called  a $1-\alpha$ confidence set.
+
+In practice, we specify the confidence level $1-\alpha$. This $\alpha$ is not necessarily the size of a hypothesis test. $1-\alpha$= long-term relative frequency of correct conclusion using $C$ as the method of getting the inference.
+
+Coverage Prob. can depend on $\theta$, so conf. level corresponds to the "worst case".
+
+\begin{exmp}[Ex. \ref{exmp:62} cont.]
+$X_i\sim\text{ i.i.d. }F$, w/ mean $\mu$, interval $\bar{X}\pm\Delta(\underline{X})$. Coverage Prob. is 
+$$
+\begin{aligned}
+([\bar{X}-\Delta(\underline{X}) \bar{X}+\Delta(\underline{X})]\text{ contains }\mu)&=P(\bar{X}-\Delta(\underline{X})\leqslant\mu\leqslant\bar{X}+\Delta(\underline{X}))\\
+&=P(|\bar{X}-\mu|\leqslant\Delta(\underline{X}))
+\end{aligned}
+$$
+In case $F=N(\mu, \sigma^2)$, we know $T=\frac{\bar{X}-\mu}{s/\sqrt{n}}$ has a students -- t dist with diff=$n-1$.
+
+Therefore
+$$
+P\lp|\bar{X}-\mu|\leqslant t_{\frac{\alpha}{2},n-1}\frac{s}{\sqrt{t}}\rp=P\lp -t_{\frac{\alpha}{2}, n-1}\leqslant T\leqslant t_{\frac{\alpha}{2}, n-1}\rp=1-\alpha
+$$
+so this suggest error bound $\Delta(\underline{X})=t_{\frac{\alpha}{2}, n-1}\frac{s}{\sqrt{n}}$ and the $1-\alpha$ confidence interval
+$$
+\bar{X}\pm t_{\frac{alpha}{2}, n-1}\frac{s}{\sqrt{n}}
+$$
+
+Several ways to identify appropriate confidence sets
+\begin{enumerate}[i)]
+\item use of "pivots"
+\item use of hypothesis tests
+\item use of asymptotic (approximate) distributions
+\item Bayesian (credible) intervals
+\item likelihood (confidence) intervals
+\end{enumerate}
+\end{exmp}
+
+\begin{defn}
+A r.v. $Q(\underline{X}, \theta)$ is a \underline{pivotal quantity} if
+\begin{enumerate}
+\item The distribution of $Q(\underline{X}, \theta)$ does not depend on $\Theta$ (and is known)
+\item  These are sets $A$, $C(\underline{X})$ s.t.
+$$
+Q(\underline{X}, \theta)\in A\Leftrightarrow Q\in C(\underline{X})
+$$
+where $C(\underline{X})$ is a useful set estimator of $\theta$.
+\end{enumerate}
+If $P(Q(\underline{X}, \theta)\in A)=1-\alpha$ then $C(\underline{X})$ is a $1-\alpha$ confidence set for $\theta$.
+\end{defn}
+
+\begin{exmp}[Ex. \ref{exmp:62} cont.]
+$X_i\sim\text{ i.i.d. N}(\mu, \sigma^2)$, $T=\frac{\bar{X}-\mu}{s/\sqrt{n}}$ has students $t_{n-1}$ dist., for all $\mu, \sigma^2$. So $T$ is a pivot with
+$$
+|T|\leqslant t_{\frac{\alpha}{2}, n-1}\Leftrightarrow\mu\in\left[\bar{x}-t_{\frac{\alpha}{2}, n-1}\frac{s}{\sqrt{n}}, \bar{x}+t_{\frac{\alpha}{2}, n-1}\frac{s}{\sqrt{n}}\right]
+$$
+It even defines a $1-\alpha$ conf. set for $(\mu, \sigma^2)$,
+$$
+C(\underline{X})=\left\{(\mu, \sigma^2):\bar{X}-t_{\frac{\alpha}{2}m n-1}\frac{s}{\sqrt{n}}\leqslant \mu\leqslant\bar{X}+t_{\frac{\alpha}{2}m n-1}\frac{s}{\sqrt{n}}\text{ and }\sigma^2>0\right\}
+$$
+We also know $V=\frac{(n-1)s^2}{\sigma^2}$ has $\chi_{n-1}^2$ distribution. Let $\chi^2_{\frac{\alpha}{2}, n-1}$ and $\chi^2_{1-\frac{\alpha}{2}, n-1}$ be the $\frac{\alpha}{2}$th and $\lp1-\frac{\alpha}{2}\rp$th quantiles for $\chi_{n-1}^2$ dist. Thus,
+$$
+P\lp\chi_{\frac{\alpha}{2}, n-1}^2\leqslant V\leqslant \chi_{1-\frac{\alpha}{2}, n-1}\rp=1-\alpha
+$$
+Hence 
+$$
+1-\alpha=P\lp\frac{(n-1)s^2}{\chi^2_{1-\frac{\alpha}{2}, n-1}}\leqslant\sigma^2\leqslant\frac{(n-1)s^2}{\chi^2_{\frac{\alpha}{2}, n-1}}\rp
+$$
+is a $1-\alpha$ confidence interval for $\sigma^2$.
+
+If the desired inference is about $(\mu, \sigma^2)$ (both parameters at the same time). We can get a set estimator of the form
+$$
+C(\underline{X})=\left\{(\mu, \sigma^2):\bar{X}-t\frac{s}{\sqrt{s}}\leqslant\mu\leqslant\bar{X}+t\frac{s}{\sqrt{n}}\}\text{ and }\frac{(n-1)s^2}{v_2}\leqslant\sigma^2\leqslant\frac{(n-1)s^2}{v_1}\right\}
+$$
+$C(\underline{X})$ is a rectangle in $\mathbb{R}^2$ to get $t$, $v_1$ and $v_2$ we solve 
+$$
+\begin{aligned}
+1-\alpha&=P\{(\mu, \sigma^2)\in C(\underline{x})\}\\
+&=\cdots\\
+&=P(|T|\leqslant t\text{ and }v_1\leqslant V\leqslant v_2)\\
+&=P(|T|\leqslant t_2)P(v_1\leqslant v_2)
+\end{aligned}
+$$
+Since $T$ and $V$ are independent. 
+
+Let $\alpha_1=1-(1-\alpha)^{1/2}$ and $t=t_{\frac{\alpha_1}{2}, n-1}$, $v_1=\chi_{\frac{\alpha_1}{2}, n-1}^2$, $v_2=\chi^2_{1-\frac{\alpha_1}{2}, n-1}$.
+
+Then 
+$$
+\left(\bar{x}-t_{\frac{\alpha_1}{2}}\frac{s}{\sqrt{n}}, \bar{x}+t_{\frac{\alpha_1}{2}}\frac{s}{\sqrt{n}}\right)\times\lp\frac{(n-1)s^2}{\chi^2_{1-\frac{\alpha_1}{2}, n-1}}, \frac{(n-1)s^2}{\chi^2_{\frac{\alpha_1}{2}, n-1}}\rp
+$$
+is a $1-\alpha$ confidence set for $(\mu, \sigma^2)$
+\end{exmp}
+
+\hrule
+\bigskip
+
+Confidence sets which are rectangles in $\mathbb{R}^p$ are also known as \underline{simultaneous confidence intervals}.
+\begin{defn}\label{defn:65}
+Suppose $(L_1, U_1), \dots, (L_p, U_p)$ are confidence intervals for $\tau_1(\theta), \dots, \tau_p(\theta)$ respectively.
+
+If each interval has $1-\frac{\alpha}{p}$ confidence then the set $C(\underline{x})=\{\theta:L_j\leqslant\tau_j(\theta)\leqslant U_j, j=1, \dots, p\}$ has coverage  preob. (confidence) not less than $1-\alpha$:
+$$
+P(\text{some $\tau_j$ is not in }(L_j, U_j))\leqslant\sum_{j=1}^pP(\tau_j\text{ is not in }(L_j, U_j))=\alpha
+$$
+(in fact, not exceeding $1-\alpha+\frac{p-1}{2p}\alpha^2$)
+\end{defn}
+
+\begin{exmp}\label{exmp:66}
+$\left.\begin{aligned}
+&X_1, \dots, X_n\sim\text{ i.i.d. N}(\mu_1, \sigma^2)\\
+&Y_1, \dots, Y_n\sim\text{ i.i.d. N}(\mu_2, \sigma^2)
+\end{aligned}\right\}\sigma^2
+$ same for both indep. samples. Simultaneously estimate $\mu_1, \mu_2$, and $\mu_1-\mu_2$. Use $1-\frac{\alpha}{3}$ confidence interval for each:
+$$
+\begin{aligned}
+\mu_1:&\bar{x}\pm t_{\frac{\alpha}{6}, n_1-1}\frac{s_1}{\sqrt{n_1}}, \text{ where }s_1^2=var\text{ of } X_i\text{s}\\
+\mu_2:&\bar{y}\pm t_{\frac{\alpha}{6}, n_2-1}\frac{s_2}{\sqrt{n_2}}, \text{ where }s_2^2=var\text{ of } Y_i\text{s}\\
+\mu_1-\mu_2:&(\bar{x}-\bar{y})\pm t_{\frac{\alpha}{6}, n_1+n_2-2}\hat{\sigma}\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}, ~\hat{\sigma}^2=\frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2}
+\end{aligned}
+$$
+$$
+\frac{(n_1+n_2-2)\hat{\sigma}^2}{\sigma^2}=\frac{(n_1-1)s_1^2}{\sigma^2}+\frac{(n_2-1)s^2}{\sigma^2}\sim\chi^2_{n_1+n_2-2}
+$$
+$\frac{(\bar{x}-\bar{y})-(\mu_1-\mu_2)}{\sigma\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}$ has std normal dist.
+
+So $T_3=\frac{(\bar{x}-\bar{y})-(\mu_1-\mu_2)}{\hat{\sigma}\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}$ has $t_{n_1+n_2-2}$ dist.
+\end{exmp}
+
+\begin{thrm}\label{thrm:67}
+Suppose $X_i\sim\text{ i.i.d} f(x|\mu, \sigma^2)$, where $f(\cdot|\mu, \sigma^2)$ is a location-scale family.
+\begin{enumerate}
+\item $\mu$ unknown, $\sigma$ known
+$$
+T\text{ location invariant}\Rightarrow T-\mu\text{ is a pivot}.
+$$
+\item $\mu$ known, $\sigma$ unknown:
+$$
+S \text{ is scale-invariant}\Rightarrow \frac{S}{\sigma} is a pivot
+$$
+\item both unknown:
+$$
+(T, S)\text{ is location-scale invariant}\Rightarrow\lp\frac{T-n}{\sigma}, \frac{s}{\sigma}\rp\text{ is a pivot}
+$$
+$$
+(T, S) \text{ is location-scale invariant}\Rightarrow\lp\frac{T(\underline{x}-\mu)}{\sigma}, \frac{s(\underline{x})}{\sigma}\rp=\lp T(y), s(\underline{y})\rp
+$$
+where $y_i=\frac{X_i-\mu}{\sigma}\sim f(\cdot|0, 1)\Rightarrow\lp\frac{T(\underline{x}-\mu){\sigma}}, \frac{S(\underline{x})}{\sigma}\rp$ is a pivot.
+\end{enumerate}
+\end{thrm}
+
+
+\begin{exmp}\label{exmp:68}
+$X_i\sim \text{ i.i.d. Laplace}(\mu, \sigma^2)$,
+$$
+\begin{aligned}
+f(x|\mu, \sigma)&=\frac{1}{2\sigma}e^{-\frac{|x-\mu|}{\sigma}}\quad x\in \mathbb{R}\\
+&=\frac{1}{\sigma}g\lp\frac{x-\mu}{\sigma}\rp, \quad g(x)=\frac{1}{2}e^{-|x|}
+\end{aligned}
+$$
+
+This is location scale family
+$$
+\bar{X}, S \text{ are location-scale invariant}\Rightarrow\lp\frac{\bar{x}-\mu}{\sigma}, \frac{s}{\sigma}\rp\text{ is pivot}\Rightarrow \lp\frac{\bar{x}-\mu}{s}, \frac{s}{\sigma}\rp\text{ is a pivot}
+$$
+So we can use simultaneous CI's such as
+$$
+(\bar{X}-tS, \bar{X}+tS), ~\lp\frac{S}{V_1}, \frac{S}{V_2}\rp
+$$
+for appropriately chosen $t, v_1, v_2$:
+$$
+P\lp-t\leqslant\leqslant\frac{\bar{X}-\mu}{s}\leqslant, v_1\leqslant\frac{s}{\sigma}\leqslant v_2\rp=1-\alpha
+$$
+Based on MLE:
+$$
+(\hat{\mu}, \hat{\sigma})=\lp m=\text{med}(\underline{X}, D=\frac{1}{n}\sum_{i=1}^n|X_i-m|\rp
+$$
+$(M, D)$ is also location-scale invariant. So $\lp\frac{M-\mu}{D}, \frac{D}{\sigma}\rp$ is a pivot also.
+\end{exmp}
+
+
+A couple of ways to identify pivots that may be useful:
+
+
+
+\begin{thrm}\label{thrm:69}
+Suppose $T$ is a 1-dim statistic with continuous dist $F_T(t|\theta)$.
+\begin{enumerate}
+\item $Q(T, \theta)=F_T(T|\theta)$ is pivot
+\item $\left.\begin{aligned}
+&F_T(t|\theta)=h(Q(t, \theta))\\
+&Q(t|\theta)\text{ is monotone int.}
+\end{aligned}\right\}\Rightarrow Q(T, \theta)$ is a pivot.
+\end{enumerate}
+\end{thrm}
+
+\begin{proof}
+\begin{enumerate}
+\item $Q(T, \theta)$ has unif(0, 1) which is indep. of $\theta$ so $Q$ is a pivot.
+\item Exercise.
+\end{enumerate}
+\end{proof}
+
+
+\hrule
+\bigskip
+
+If $T$ has location family
+$$
+f_T(t|\mu)=g(t-\mu)\Rightarrow T-\mu\text{ is pivotal}
+$$
+
+It $T$ has scale family
+$$
+f_T(t|\sigma)=\frac{1}{\sigma}g\lp\frac{t}{\mu}\rp\Rightarrow\frac{T}{\sigma}\text{ is pivotal}
+$$
+
+\begin{exmp}\label{exmp:610}
+$X_i\sim\text{ i.i.d. gamma}(\gamma, 1)$ (Not location family and not a scale family)
+$$
+T=X_1+X_2+\cdots+X_n\sim\text{gamma}(n\gamma, 1)
+$$
+We might consider interval based on $T$
+$$
+F_T(t|\gamma)=\int_0^t\frac{u^{n\gamma-1}e^{-u}}{\Gamma(n\gamma)}\mathrm{d}u
+$$
+$$
+Q(T|\gamma)=\int_0^T\frac{u^{n\gamma-1}e^{-u}}{\Gamma{n\gamma}}\mathrm{d}u
+$$
+This is a nondecreasing function of $\gamma$,
+
+$Q(T, \gamma)\sim$Unif(0, 1), so we can find a $1-\alpha$ confidence set for $\gamma$ by
+$$
+C=\{\gamma:\frac{\alpha}{2}\leqslant Q(T, \gamma)\leqslant 1-\frac{\alpha}{2}\}
+$$
+
+By the monotonicity mentioned about $C$ is an interval. $L$ satisfies $\frac{\alpha}{2}=Q(T, L)=\int_0^T\frac{u^{nL-1}e^{-u}}{\Gamma(uL)}\mathrm{d}u$ and $U$ satisfies $1-\frac{\alpha}{2}=Q(T, U)=\int_0^T\frac{u^{nU-1}e^{-u}}{\Gamma(nU)}\mathrm{d}x$.
+
+Solved numerically (once, each time we observe $T$)
+\end{exmp}
+
+\begin{exmp}[Ex. \ref{exmp:68} cont.]
+$X_i\sim\text{Laplace}(\mu, \sigma^2)$, $\mu$ is known
+$$
+f(\underline{x}|\sigma)=(2\sigma)^{-n}e^{-\sum_{i=1}^n\frac{|x_i-\mu|}{\sigma}}
+$$
+We see $T=\sum_{i=1}^n|X_i-\mu|$ is min suff. for $\sigma$.
+
+In fact, we have an exponential family and 
+$$
+f_T(t|\mu)=\sigma^{-n}h(t)e^{-\frac{t}{\sigma}}, \quad t>0
+$$
+for some $h(t)$ (by proof of Neyman Factor Theorem) $\Rightarrow h(t)=\frac{t^{n-1}}{\Gamma(n)}$.
+
+\underline{ie}. $T\sim\text{gamma}(n,\sigma)$ (equiv., $|X-\mu|\sim e^{\sigma}$). Then $Y=\frac{T}{\sigma}\sim\text{gamma}(n, 1)$ and this makes $\frac{T}{\sigma}$ a pivot $\Rightarrow F_T(t|\sigma)=P\lp Y\leqslant \frac{t}{\sigma}\rp$. Advantage of pivot $\to$ coverage is exactly $1-\alpha$.
+\end{exmp}
+
+\begin{thrm}\label{thrm:611}
+Let $A(\theta_0)$ be a level $\alpha$ acceptance region for a test of $H_0:\theta=\theta_0$. Define $C(\underline{X})=\{\theta_0:\underline{x}\in A(\theta_0)\}$. Then $C(\underline{x})$ is a confidence set with confidence $\geqslant 1-\alpha$ and =$1-\alpha$ if $A(\theta_0)$ has size $\alpha$ for some $\theta_0$
+$$
+A(\theta_0)=\{x:\theta_0\in C(\underline{x})\}
+$$
+\end{thrm}
+\begin{proof}
+$P_{\theta_0}(c(\underline{x}\text{ contains }\theta_0)=P_{\theta_0}(\underline{x}\in A(\theta_0))=1-$ Power function at $\theta=\theta_0$ for a test of $H_0:\theta=\theta_0\geqslant 1-\alpha$.
+\end{proof}
+
+
+In many cases the test can be derived from a pivotal quantity.
+
+\begin{exmp}[Ex \ref{exmp:62} cont.]
+$X_i\sim \text{ i.i.d. N}(\mu, \sigma^2), \sigma^2$ known. We saw UMPU test of $H_0:\mu=\mu_0$ vs $H_1:\mu\not\mu_0$ has acceptance region $|T|\leqslant t_{\frac{\alpha}{2}, n-1}$ where $T=\frac{\bar{x}-\mu_0}{s/\sqrt{n}}$ and this is equivalent to
+$$
+\mu_0\in\lp\bar{x}-t-{\frac{\alpha}{2}, n-1}\frac{s}{\sqrt{n}}, \bar{x}+t_{\frac{\alpha}{2}, n-1}\frac{s}{\sqrt{n}}\rp
+$$
+so this is a $1-\alpha$ confidence interval for $\mu$.
+
+Suppose we consider the UMP test of $H_0:\mu\leqslant\mu_0$ vs $H_1:\mu>\mu_0$. This acceptance region is $A\in\{x:T\leqslant_{\alpha, n-1}\}=\{x:\bar{x}-\mu_0\leqslant t_{\alpha, n-1}\frac{s}{\sqrt{n}}\}$
+$$
+\underline{x}\in A\text{ iff } \mu\in C=\lp\bar{x}-t_{\alpha, n-1}\frac{s}{\sqrt{n}}, \infty\rp
+$$
+This is called a one sided confidence interval. This is useful if we are only interested in a lower bound for $\mu$. (This is lower bound is larger than the lower bound for the two-sided interval and hence better)
+
+Choose between on and two-sided intervals for the same reasons you choose between one and  two-sided tests.
+
+Since there are a number of different tests there will be a number of different confidence interval.
+\end{exmp}
+
+\begin{exmp}\label{exmp:612}
+$X_i\sim\text{ i.i.d. exp}(\beta)$, $T=X_1+\cdots+X_n$. We saw that the tests for $H_0:\beta=\beta_0$ vs $H_1:\beta\not=\beta_0$ of the form reject $H_0$ if $T>C_2\beta_0$ or $T<C_1\beta_0$. Acceptance region $C_1\beta_0\leqslant T\leqslant C_2\beta_0$ iff confidence interval is $\lp\frac{T}{C_2}, \frac{T}{C_1}\rp$. The choice of $C_1\not=C_2$ depend on the test we invert.
+\begin{enumerate}
+\item UMPU test: $C_1\not=C_2$ satisfies $1-\alpha=\int_{C_1}^{C_2}\frac{y^{n-1}e^{-y}}{\Gamma(n)}\mathrm{d}y=\int_{C_1}^{C_2}\frac{y^ne^{-y}}{\Gamma(n+1)}\mathrm{d}y$.
+\item LRT: $C_1\not=C_2$ satisfies $C_1^ne^{-C_1}=C_2^ne^{-C_2}$ and $1-\alpha=\int_{C_1}^{C_2}\frac{y^{n-1}e^{-y}}{\Gamma(n)}\mathrm{d}y$.
+\item Use pivot with "equal tails", 
+$$
+\frac{\alpha}{2}=\int_{0}^{C_1}\frac{y^{n-1}e^{-y}}{\Gamma(n)}\mathrm{d}y=\int{C_2}^\infty\frac{y^{n-1}e^{-y}}{\Gamma(n)}\mathrm{d}y
+$$
+\item Asymp. LRT
+$$
+-2\log\lambda(\underline{x})=2n\lp\frac{\bar{x}}{\beta_0}-1-\log\lp\frac{\bar{x}}{\beta_0}\rp\rp\sim \chi^2_1
+$$
+To get CI:  solve for $\beta$ s.t. $\frac{\bar{x}}{\beta}-1-\log\frac{\bar{x}}{\beta}\leqslant\frac{1}{2n}\chi^2_{\alpha, 1}$
+\item score test: $S(\beta|\underline{x})=\frac{\bar{X}}{\beta^2}-\frac{1}{\beta}$. Standardized: $n\lp\frac{\bar{x}}{\beta}-1\rp^2\dot{\sim}\chi^2_1=z^2$ with $z$ standard normal. Solve for $\beta$ such that $n\lp\frac{\bar{x}}{\beta}\rp^2\leqslant\chi_1^2=z^2$ interval is $\lp\frac{\bar{x}}{1+z_{\frac{\alpha}{2}}/\sqrt{n}}, \frac{\bar{x}}{1-z_{\frac{\alpha}{2}}/\sqrt{n}}\rp$. So $c_i=n\lp1\mp \frac{z_{\frac{\alpha}{2}}}{\sqrt{n}}\rp$
+\item Wald test (plug in MLE for variance $(\hat{\beta})=\frac{\beta^2}{n})$
+$$
+\sqrt{n}\frac{\bar{x}-\beta}{\bar{x}}\dot{\sim}z\Rightarrow\text{interval} \left\{\bar{x}\lp(1-\frac{z_{\frac{\alpha}{2}}}{\sqrt{n}}\rp, \bar{x}\lp 1+\frac{z_{\frac{\alpha}{2}}}{\sqrt{n}}\rp\right\}
+$$
+
+$C_i=n\lp 1\pm z_{\frac{\alpha}{2}}\sqrt{n}\rp^{-1}$.
+\item Reparameterize with $\lambda=\frac{1}{\beta}$. Wald test/interval for $\lambda$, $\hat{\lambda}=\frac{1}{\bar{x}}var(\hat{\lambda})\dot{=}\frac{\lambda^2}{n}$
+
+$$
+\frac{\sqrt{n}(\hat{\lambda}-\lambda)}{\hat{\lambda}}=\sqrt{n}\lp 1-\frac{\bar{x}}{\beta}\rp \Rightarrow \text{some interval as 5)} .
+$$
+\item Score test. where we use \underline{observed} information number in place of $I(\theta_0)$
+
+$$
+-\frac{\partial^2}{\partial \theta^2}\log L(\theta|\underline{x})\Rightarrow \text{some interval as 6) in this case}
+$$
+\item Classical student's interval (based on asymptotics without parametric assumption) since $\beta=\mu=$mean.
+$$
+\bar{x}\pm t_{\frac{\alpha}{2}, n-1}\frac{s}{\sqrt{n}}
+$$
+\end{enumerate}
+\end{exmp}
+
+How to choose?
+\begin{enumerate}
+\item optimality of the corresponding hypothesis test
+\item Expected length of the interval
+\item convenience of calculation
+\end{enumerate}
+
+\begin{thrm}\label{thrm:613}
+Let $C(\underline{x})$ be the confidence set corresponding to kst with decision rule $Q(\underline{x})=I_{c(\underline{x})}(\theta_0)$. Then the probability of falsely covering $\theta_0$ is 
+$$
+P_{\theta_0}(C(\underline{x}\text{ contains }\theta_0)=1-\beta(\theta)
+$$
+where $\beta=$power of the test.
+\end{thrm}
+\begin{proof}
+Use the equivalence $\theta_0\in C(\underline{x})$ iff accept $H_0$
+\end{proof}
+
+\begin{cor}\label{cor:614}
+Let $C(\underline{x})$ be as above
+\begin{enumerate}
+\item UMP test iff \underline{uniformly most accurate CI}
+\item UMPU test iff uniformly most accurate unbiased CI
+\end{enumerate}
+\end{cor}
+
+\begin{defn}\label{defn:615}
+Approx. confidence intervals (sets) are constructed from \underline{asymptotic pivots}: If $Q(\underline{x}, \theta)$ is real valued 
+$$
+Q(x, \theta)\Rightarrow G, ~G\text{ does not depend on }\theta
+$$
+Then $C=\{Q:C_1\leqslant Q\leqslant C_2\}$ and $G(C_1)-G(C_1)=1-\alpha$. $C$ is a set with approx. $1-\alpha$ confidence.
+\end{defn}
+
+
+\begin{exmp}\label{exmp:616}
+$\left.\begin{aligned}
+&X_i\sim\text{ i.i.d. Pois}(\lambda),~i=1, \dots, m\\
+&Y_i\sim\text{ i.i.d. Pois}(\mu),~i=1, \dots, n
+\end{aligned}\right\}$ indep. samples. We want a conf. interval for $\theta=\frac{\lambda}{\mu}$. Inverting LRT: $H_0:\theta=\theta_0$ vs $\theta\not=\theta_0$. MLE $(\hat{\lambda}, \hat{\mu})=(\bar{x}, \bar{y})$ Restricted MLE $(\hat{\lambda}_0, \hat{\lambda}_0)=\lp\frac{\theta_0(m\bar{x}+n\bar{y})}{m\theta_0+n}\frac{m\bar{x}+n\bar{y}}{m\theta_0+n}\rp\Rightarrow$ LRT stat is
+$$
+\lambda(x, y)=\frac{\theta_0^{m\bar{x}}\lp\frac{m\bar{x}+n\bar{y}}{m\theta_0+n}\rp^{m\bar{x}+n\bar{y}}}{\bar{x}^{m\bar{x}}\bar{y}^{n\bar{y}}}
+$$
+Let $Q_L(\theta_0)=-2\log\lambda(\underline{x}, \underline{y})\Rightarrow\chi^2_1\leftarrow$ an approx. $1-\alpha$ conf. interval for $\theta$, solves
+$$
+Q_L(\theta)\leqslant\chi^2_{\alpha ,1}
+$$
+(for a conf. set of $(\lambda, \mu)$ invert the LRT for $H_0:\lambda=\lambda_0, \mu=\mu_0$ and $-2\log\lambda(\underline{x}, \underline{y})\Rightarrow\chi^2_2)$
+
+\underline{Alternatively}, using the asymp. dist. of the MLE
+$$
+\sqrt{n}\left(\begin{matrix}
+\bar{x}-\lambda\\
+\bar{y}-\mu
+\end{matrix}\right)\Rightarrow\text{N}(\underline{0}, \Sigma)
+$$
+where $\Sigma=\left(\begin{matrix}
+\lambda & 0\\
+0 & \mu
+\end{matrix}\right)$
+
+By delta method
+$$
+\sqrt{n}\lp\frac{\bar{x}}{\bar{y}}-\theta\rp\Rightarrow\text{N}\lp 0, \frac{\lambda}{\mu^2}+\frac{\lambda^2}{\mu^3}\rp
+$$
+so $\frac{\bar{x}}{\bar{y}}$ is \text{AN}$\lp\theta, \frac{1}{n}\lp\frac{\lambda}{\mu^2}+\frac{\lambda^2}{\mu^3}\rp\rp\Rightarrow$ an approx. $1-\alpha$ CI is
+$$
+\frac{\bar{x}}{\bar{y}}\pm z_{\frac{\alpha}{2}}\sqrt{\frac{1}{n}\lp\frac{\bar{x}}{\bar{y}^2}+\frac{\bar{x}^2}{\bar{y}^3}\rp}
+$$
+We can always get asymptotic pivots when we have asymptotic normality and we have a consistent estimate of the asymptotic variance.
+
+If $\hat{\theta}$ is an estimator of $\theta$
+$$
+\sqrt{n}(\hat{\theta}-\theta)\Rightarrow\text{N}(0, V)
+$$
+and $V$ is consistent for $V$. Then 
+$$
+Q=\frac{\sqrt{n}(\hat{\theta}-\theta)}{\sqrt{\hat{V}}}\Rightarrow\text{N}(0, 1)
+$$
+so an approx. $1-\alpha$ CI for $\theta$ is given by 
+$$
+\hat{\theta}\pm z_{\frac{\alpha}{2}}\sqrt{\frac{\hat{V}}{n}}
+$$
+\end{exmp}
+
+
+
+\begin{exmp}\label{exmp:617}
+Moment estimators ($X_i\sim\text{ i.i.d}$). $\hat{m}_j=\frac{1}{n}\sum_{i=1}^n X_i^j$ estimates $m_j=E(x^j)$
+$$
+\sqrt{n}(\hat{m}_j-m_j)\Rightarrow\text{N}(0, m_{2j}-m_j^2)
+$$
+so $1-\alpha$ CI for $m_j:\hat{m}_j\pm z_{\frac{\alpha}{2}\sqrt{\frac{\hat{m}_{2j}-\hat{m}_j^2}{n}}}$. In particular, $1-\alpha$ CI for mean $\mu$ is 
+$$
+\bar{x}\pm z_{\frac{\alpha}{2}}\frac{\hat{\sigma}}{\sqrt{n}}
+$$
+We can even use the delta method here for a CI for $\mu^2$:
+$$
+\sqrt{n}(\bar{x}^2-\mu^2)\Rightarrow\text{N}(0, 4\mu^2\sigma^2)
+$$
+
+so $Q=\frac{\bar{x}^2-\mu^2}{\sqrt{4\hat{\sigma}^2\bar{x}^2/n}}\Rightarrow\text{N}(0, 1)\Rightarrow\bar{x}^2\pm 2z_{\frac{\alpha}{2}}\frac{\hat{\sigma}\bar{x}}{\sqrt{n}}$
+\end{exmp}
+
+\hrule
+\bigskip
+
+\begin{exmp}\label{exmp:618}
+$(X_i, Y_i)\sim$ i.i.d. w/ means $\mu_x$, $\mu_y$ and unknown cov. matrix $\sigma$. Moment estimators for $\Sigma$ are
+$$
+\hat{\Sigma}=\lp\begin{matrix}
+\frac{1}{n}\sum_{i=1}^n &\frac{1}{n}\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y}\\
+\frac{1}{n}\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{x}) & \frac{1}{n}\sum_{i=1}^n(y_i-\bar{y})^2
+\end{matrix}\rp
+$$
+$(\bar{x}, \bar{y})$ is asymp. biv. normal $\lp\lp\begin{matrix}
+0\\0
+\end{matrix}\rp, \frac{1}{n}\Sigma\rp$.
+
+Ths implies 
+$$
+Q=n\lp\begin{matrix}
+\bar{x}-\mu_x\\\bar{y}-\mu_y
+\end{matrix}\rp'\Sigma^{-1}\lp\begin{matrix}\bar{x}-\mu_x\\\bar{y}-\mu_y\end{matrix}\rp\Rightarrow\chi^2_2
+$$
+
+Put
+$$
+A=\lp\begin{matrix}
+a_11 &a_12\\
+a_21 &a_22
+\end{matrix}\rp=n\hat{\Sigma}^{-1}
+$$
+
+Solve $Q(\mu_x, \mu_y)\leqslant\chi_{\alpha, 2}^2$ for
+$$
+a_11(\bar{x}-\mu_x)^2+2a_{12}(\bar{x}-\mu_x)(\bar{y}-\mu_y)+a_{22}(\bar{y}-\mu_y)^2\leqslant\chi^2_{\alpha, 2}
+$$
+which defines an ellipse in $\mathbb{R}^2$ for $(\mu_x, \mu_y)$. We could have gotten simult. CI's for $\mu_x$ and $\mu_y$ of the form
+$$
+\bar{x}\pm \frac{c_1\hat{\sigma}_x}{\sqrt{n}}, \quad\bar{y}\pm \frac{c_2\hat{\sigma}_y}{\sqrt{n}}
+$$
+This has disadvantage:
+\begin{enumerate}
+\item Since we don't known the dependence (covariance) of $\bar{x}$ and $\bar{y}$, we would have to use an approximation like Bonferroni's method.
+\item If $\bar{x}$ and $\bar{y}$ are highly dependent we would not want the intervals for $\mu_x$ and $\mu_y$ and $\mu_y$ to be algebraically indep. Instead, inverting Wald's test in a multiparameter setting also gives a confidence ellipsoid.
+\end{enumerate}
+\end{exmp}
+
+\begin{exmp}
+Estimating quantile (when MLE is difficult/cumbersome) (or when we don't have a parametric family)
+\begin{enumerate}
+\item Assume we have $f(x|\theta)$, $x_p=p$th quantile $p\in(0, 1)$. We know (Theorem \ref{thrm:443})
+$$
+\sqrt{n}(\hat{x}_p-x_p)\Rightarrow\text{N}\lp0, \frac{p(1-p)}{(f(x_p))^2}\rp
+$$
+Assume we can estimate $f(x_p|\theta)$. We then have an approx. $1-\alpha$ CI for $x_p$
+$$
+\hat{x}_p\pm z_{\frac{\alpha}{2}}\hat{f}_{xp}\sqrt{\frac{p(1-p)}{n}}
+$$
+\item Nonparametric does not depend on knowing the model for $f$.
+\end{enumerate}
+
+inverting the \underline{sign test}
+
+Consider the test for $H_0:X_p=q$ vs $H_1:X_p\not=q$ and assume $X_i\sim F$ where $F$ is continuous.
+
+The hypotheses are equivalent to
+$$
+H_0:F(q)=p\quad\text{vs}\quad H_1:F(q)\not=p
+$$
+We can observe the binomial r.v.
+$$
+Y=\sum_{i=1}^n I_{-\infty, q}x_i\sim\text{Binomial}(n, F(q))
+$$
+
+The usual test for a binomial parameter $p$ has acceptance region
+$$
+y_1\leqslant y_2
+$$
+where $y_1=np-z_{\frac{\alpha}{2}}\sqrt{np(1-p)}$, $y_2=np+z_{\frac{\alpha}{2}}\sqrt{np(1-p)}$
+Observe: $y\leqslant y_2$ iff no more than $y_2$ data are $\leqslant$ q iff $X_{\lceil y_2+1\rceil}>q$
+
+$y\geqslant y_1$ iff at least $y_1$ data are $\leqslant$ q iff $X_{\lfloor y_1\rfloor}\leqslant q$.
+
+So an approx. $1-\alpha$ CI for $q$ is 
+$$
+(X_{\lfloor y_1\rfloor}, X_{\lceil y_2+1\rceil})
+$$
+This is completely nonparametric
+\end{exmp}
+
+
+\section{Bayesian Methods}
+
+\begin{defn}\label{defn:71}[The Bayesian paradigm]
+Associated with a parametric family $\mathscr{F}=\{f(x|\theta):\theta\in \Theta\}$ is a measure/weighting function $\Pi(\theta)$ (called the error) where assigns weights to particular parametric value. These weights may by interpreted as:
+\begin{enumerate}
+\item prior \underline{belief} in value of $\theta$
+\item \underline{probability} of $\theta$ (as a r.v.). OR
+\item an evaluation of \underline{importance} of value of $\theta$ in terms of allowable risk in decision making.
+\end{enumerate}
+\end{defn}
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
